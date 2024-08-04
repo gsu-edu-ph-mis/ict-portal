@@ -1,0 +1,654 @@
+{% extends "document.html" %}
+{% block body %}
+<div class="row">
+    <div id="vApp" v-cloak v-bind:data-pending="pending" class="col-md-12 ml-auto mr-auto pt-3 pb-3 pt-md-5 pb-md-5"
+        style="max-width:820px">
+        {% include 'parts/header.html' %}
+        <div class=" p-md-4 p-3 bg-glass" style="min-width: 300px;">
+            <h1 class="text-center h4">CLIENT SATISFACTION SURVEY</h1>
+            <h2 class="text-center h6 mb-4">(CSS) FORM</h2>
+            <form ref="form" v-on:submit.prevent="onSubmit" action="" method="POST">
+
+                <div class="form-group">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <label for="purpose" class="mr-1">Name</label>
+                            <em><small>(Optional)</small></em>
+                        </div>
+                        <div class="custom-control custom-switch">
+                            <input v-model="anonymous" type="checkbox" class="custom-control-input" id="anonymous">
+                            <label class="custom-control-label" for="anonymous">Hide My Identity</label>
+                        </div>
+                    </div>
+                    <input v-model="name" name="name" id="name" type="text" class="form-control"
+                        v-bind:disabled="anonymous">
+                </div>
+                <div class="form-group">
+                    <label for="contact" class="mr-1">Contact No.</label>
+                    <em><small>(Optional)</small></em>
+                    <input v-model="contact" name="contact" id="contact" type="text" class="form-control"
+                        v-bind:disabled="anonymous">
+                </div>
+                <div class="form-group">
+                    <label for="dateVisited" class="mr-1">Date Visited</label>
+                    <em v-bind:class="showHelp"><small>Adlaw sang pag bisita?</small></em>
+                    <input v-model="dateVisited" name="dateVisited" id="dateVisited" type="date" class="form-control"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="respondentSelect" class="mr-1">Type of Respondent:</label>
+                    <select v-model="respondentSelect" name="respondentSelect" id="respondentSelect" class="form-control" required>
+                        <option value=""></option>
+                        <option value="Student">Student</option>
+                        <option value="Parent">Parent</option>
+                        <option value="Stakeholder">Stakeholder</option>
+                        <option value="Faculty">Faculty</option>
+                        <option value="Staff">Staff</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input v-model="respondent" v-bind:type="respondentShow" name="respondent" class="form-control"
+                        placeholder="Pls. specify..." v-bind:required="respondentSelect=='Others'">
+                </div>
+                <div class="form-group">
+                    <label for="birthDate" class="mr-1">Birth Date</label>
+                    <input v-model="birthDate" name="birthDate" id="birthDate" type="date" class="form-control"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="content" class="mr-1">Gender</label>
+                    <select v-model="gender" name="gender" id="gender" class="form-control" required>
+                        <option value=""></option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div class="form-group" v-bind:data-error="errors['service']" v-on:click="errors.service=false">
+                    <label for="service" class="mr-1">Service Availed </label>
+                    <div class="form-group">
+                        <div class="custom-control custom-switch">
+                            <input v-model="service" name="service" value="School ID" type="checkbox" class="custom-control-input" id="schoolID">
+                            <label class="custom-control-label" for="schoolID">School ID</label>
+                        </div>
+                        <div class="custom-control custom-switch">
+                            <input v-model="service" name="service" value="Google Workspace" type="checkbox" class="custom-control-input" id="gw">
+                            <label class="custom-control-label" for="gw">Google Workspace</label>
+                        </div>
+                        <div class="custom-control custom-switch">
+                            <input v-model="service" name="service" value="Notice of Teaching Load" type="checkbox" class="custom-control-input" id="online">
+                            <label class="custom-control-label" for="online">Notice of Teaching Load</label>
+                        </div>
+                        
+                        <div class="custom-control custom-switch">
+                            <input v-model="service" name="service" value="Others" type="checkbox" class="custom-control-input" id="serviceOthers">
+                            <label class="custom-control-label" for="serviceOthers">Others</label>
+                        </div>
+                        <div v-if="service.includes('Others')">
+                            <input v-model="serviceOthers" type="text" name="serviceOthers" class="form-control" placeholder="Please specify..." />
+                        </div>
+                    </div>
+                </div>
+                
+                <hr>
+                <div class="form-group">
+                    <label for="howLong1" class="mr-1">How long will the concerned staff/office respond to your
+                        concern/query?</label>
+                    <div class="form-check">
+                        <input v-model="howLong" class="form-check-input" type="radio" name="howLong" id="howLong1"
+                            value="Immediately" required>
+                        <label class="form-check-label" for="howLong1">
+                            Immediately
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input v-model="howLong" class="form-check-input" type="radio" name="howLong" id="howLong2"
+                            value="More than 1 hour" required>
+                        <label class="form-check-label" for="howLong2">
+                            More than 1 hour
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input v-model="howLong" class="form-check-input" type="radio" name="howLong" id="howLong3"
+                            value="More than a day" required>
+                        <label class="form-check-label" for="howLong3">
+                            More than a day
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="answerQuality1" class="mr-1">Was your concern given utmost attention and
+                        feedback?</label>
+                    <div class="form-check">
+                        <input v-model="answerQuality" class="form-check-input" type="radio" name="answerQuality"
+                            id="answerQuality1" value="Gave a good solution" required>
+                        <label class="form-check-label" for="answerQuality1">
+                            Gave a good solution
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input v-model="answerQuality" class="form-check-input" type="radio" name="answerQuality"
+                            id="answerQuality2" value="Gave unclear answers" required>
+                        <label class="form-check-label" for="answerQuality2">
+                            Gave unclear answers
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input v-model="answerQuality" class="form-check-input" type="radio" name="answerQuality"
+                            id="answerQuality3" value="Couldn't solve the concern" required>
+                        <label class="form-check-label" for="answerQuality3">
+                            Couldn't solve the concern
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="environment1" class="mr-1">How was the environment of the visited office?</label>
+                    <div class="form-check">
+                        <input v-model="environment" class="form-check-input" type="radio" name="environment"
+                            id="environment1" value="Very clean" required>
+                        <label class="form-check-label" for="environment1">
+                            Very clean
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input v-model="environment" class="form-check-input" type="radio" name="environment"
+                            id="environment2" value="Not so clean" required>
+                        <label class="form-check-label" for="environment2">
+                            Not so clean
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input v-model="environment" class="form-check-input" type="radio" name="environment"
+                            id="environment3" value="Needs improvement" required>
+                        <label class="form-check-label" for="environment3">
+                            Needs improvement
+                        </label>
+                    </div>
+                </div>
+                <hr>
+                <!--  -->
+                <div class="form-group">
+                    <div class="form-row text-center font-weight-bold mb-3">
+                        <div class="col-12">Characteristic of Concerned Personnel</div>
+                    </div>
+                    <div class="form-row mb-3">
+                        <div class="col-md-4 col-12"></div>
+                        <div class="col-md-8 col-12 d-flex justify-content-between align-items-center">
+                            <div class="text-center score-columns" v-for="(column, i) in scoreColumns">
+                                ${column}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row mb-3">
+                        <div class="col-md-4 col-12">Patient</div>
+                        <div class="col-md-8 col-12 d-flex justify-content-between">
+                            <div class="text-center" v-for="(star, i) in scoring.patient.stars" v-bind:title="scoreColumns[i]">
+                                <label v-bind:for="`patient-`+i" class="stars" v-on:click="onClick('patient', i)" v-on:mouseenter="onHoverStar('patient', i)" v-on:mouseleave="onExitStar('patient')" v-bind:data-on="isStarHighlighted('patient', i)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z" /></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z" /></svg>
+                                    <input v-model="patient" type="radio" name="patient" v-bind:id="`patient-`+i" v-bind:value="scores[i]" required>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row mb-3">
+                        <div class="col-md-4 col-12">Enthusiastic</div>
+                        <div class="col-md-8 col-12 d-flex justify-content-between">
+                            <div class="text-center" v-for="(star, i) in scoring.enthusiastic.stars" v-bind:title="scoreColumns[i]">
+                                <label v-bind:for="`enthusiastic-`+i" class="stars" v-on:click="onClick('enthusiastic', i)" v-on:mouseenter="onHoverStar('enthusiastic', i)" v-on:mouseleave="onExitStar('enthusiastic')" v-bind:data-on="isStarHighlighted('enthusiastic', i)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z" /></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z" /></svg>
+                                    <input v-model="enthusiastic" type="radio" name="enthusiastic" v-bind:id="`enthusiastic-`+i" v-bind:value="scores[i]" required>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row mb-3">
+                        <div class="col-md-4 col-12">Responsive/ Listened Carefully</div>
+                        <div class="col-md-8 col-12 d-flex justify-content-between">
+                            <div class="text-center" v-for="(star, i) in scoring.responsive.stars" v-bind:title="scoreColumns[i]">
+                                <label v-bind:for="`responsive-`+i" class="stars" v-on:click="onClick('responsive', i)" v-on:mouseenter="onHoverStar('responsive', i)" v-on:mouseleave="onExitStar('responsive')" v-bind:data-on="isStarHighlighted('responsive', i)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z" /></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z" /></svg>
+                                    <input v-model="responsive" type="radio" name="responsive" v-bind:id="`responsive-`+i" v-bind:value="scores[i]" required>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row mb-3">
+                        <div class="col-md-4 col-12">Friendly/ Courteous</div>
+                        <div class="col-md-8 col-12 d-flex justify-content-between">
+                            <div class="text-center" v-for="(star, i) in scoring.friendly.stars" v-bind:title="scoreColumns[i]">
+                                <label v-bind:for="`friendly-`+i" class="stars" v-on:click="onClick('friendly', i)" v-on:mouseenter="onHoverStar('friendly', i)" v-on:mouseleave="onExitStar('friendly')" v-bind:data-on="isStarHighlighted('friendly', i)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z" /></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z" /></svg>
+                                    <input v-model="friendly" type="radio" name="friendly" v-bind:id="`friendly-`+i" v-bind:value="scores[i]" required>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <!--  -->
+                <div class="form-group">
+                    <div class="form-row text-center font-weight-bold mb-3">
+                        <div class="col-12">Service Quality Dimensions</div>
+                    </div>
+                    <div class="form-row mb-3">
+                        <div class="col-md-4 col-12"></div>
+                        <div class="col-md-8 col-12 d-flex justify-content-between align-items-center">
+                            <div class="text-center score-columns" v-for="(column, i) in scoreColumns2">
+                                ${column}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row mb-3">
+                        <div class="col-md-4 col-12">
+                            <div>Responsiveness</div>
+                            <div class="help">
+                                <em><small>Willingness to help, assist and provide prompt service</small></em>
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-12 d-flex justify-content-between flex-wrap">
+                            <div class="text-center" v-for="(star, i) in scoring.responsiveness.stars" v-bind:title="scoreColumns2[i]">
+                                <label v-bind:for="`responsiveness-`+i" class="stars" v-on:click="onClick('responsiveness', i)" v-on:mouseenter="onHoverStar('responsiveness', i)" v-on:mouseleave="onExitStar('responsiveness')" v-bind:data-on="isStarHighlighted('responsiveness', i)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z" /></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z" /></svg>
+                                    <input v-model="responsiveness" type="radio" name="responsiveness" v-bind:id="`responsiveness-`+i" v-bind:value="scores2[i]" required>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row mb-3">
+                        <div class="col-md-4 col-12">
+                            <div>Reliability</div>
+                            <div class="help">
+                                <em><small>Provide what is needed and what was promised following the policy and standards</small></em>
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-12 d-flex justify-content-between">
+                            <div class="text-center" v-for="(star, i) in scoring.reliability.stars" v-bind:title="scoreColumns2[i]">
+                                <label v-bind:for="`reliability-`+i" class="stars" v-on:click="onClick('reliability', i)" v-on:mouseenter="onHoverStar('reliability', i)" v-on:mouseleave="onExitStar('reliability')" v-bind:data-on="isStarHighlighted('reliability', i)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z" /></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z" /></svg>
+                                    <input v-model="reliability" type="radio" name="reliability" v-bind:id="`reliability-`+i" v-bind:value="scores2[i]" required>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row mb-3">
+                        <div class="col-md-4 col-12">
+                            <div>Access and Facilities</div>
+                            <div class="help">
+                                <em><small>Convenience of location, ample amenities for comfortable transactions and uses clear signage</small></em>
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-12 d-flex justify-content-between">
+                            <div class="text-center" v-for="(star, i) in scoring.access.stars" v-bind:title="scoreColumns2[i]">
+                                <label v-bind:for="`access-`+i" class="stars" v-on:click="onClick('access', i)" v-on:mouseenter="onHoverStar('access', i)" v-on:mouseleave="onExitStar('access')" v-bind:data-on="isStarHighlighted('access', i)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z" /></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z" /></svg>
+                                    <input v-model="access" type="radio" name="access" v-bind:id="`access-`+i" v-bind:value="scores2[i]" required>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row mb-3">
+                        <div class="col-md-4 col-12">
+                            <div>Communication</div>
+                            <div class="help">
+                                <em><small>Keeping clients informed in a language they can easily understand and listening to their feedback</small></em>
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-12 d-flex justify-content-between">
+                            <div class="text-center" v-for="(star, i) in scoring.communication.stars" v-bind:title="scoreColumns2[i]">
+                                <label v-bind:for="`communication-`+i" class="stars" v-on:click="onClick('communication', i)" v-on:mouseenter="onHoverStar('communication', i)" v-on:mouseleave="onExitStar('communication')" v-bind:data-on="isStarHighlighted('communication', i)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z" /></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z" /></svg>
+                                    <input v-model="communication" type="radio" name="communication" v-bind:id="`communication-`+i" v-bind:value="scores2[i]" required>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row mb-3">
+                        <div class="col-md-4 col-12">
+                            <div>Costs</div>
+                            <div class="help">
+                                <em><small>Qualitative information on the cost of each service and billing process/es</small></em>
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-12 d-flex justify-content-between">
+                            <div class="text-center" v-for="(star, i) in scoring.costs.stars" v-bind:title="scoreColumns2[i]">
+                                <label v-bind:for="`costs-`+i" class="stars" v-on:click="onClick('costs', i)" v-on:mouseenter="onHoverStar('costs', i)" v-on:mouseleave="onExitStar('costs')" v-bind:data-on="isStarHighlighted('costs', i)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z" /></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z" /></svg>
+                                    <input v-model="costs" type="radio" name="costs" v-bind:id="`costs-`+i" v-bind:value="scores2[i]" required>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row mb-3">
+                        <div class="col-md-4 col-12">
+                            <div>Integrity</div>
+                            <div class="help">
+                                <em><small>There is honesty, justice, fairness and trust in each service while dealing with clients</small></em>
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-12 d-flex justify-content-between">
+                            <div class="text-center" v-for="(star, i) in scoring.integrity.stars" v-bind:title="scoreColumns2[i]">
+                                <label v-bind:for="`integrity-`+i" class="stars" v-on:click="onClick('integrity', i)" v-on:mouseenter="onHoverStar('integrity', i)" v-on:mouseleave="onExitStar('integrity')" v-bind:data-on="isStarHighlighted('integrity', i)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z" /></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z" /></svg>
+                                    <input v-model="integrity" type="radio" name="integrity" v-bind:id="`integrity-`+i" v-bind:value="scores2[i]" required>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row mb-3">
+                        <div class="col-md-4 col-12">
+                            <div>Assurance</div>
+                            <div class="help">
+                                <em><small>Perform their duties, understanding client needs, helpfulness and good work relationships</small></em>
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-12 d-flex justify-content-between">
+                            <div class="text-center" v-for="(star, i) in scoring.assurance.stars" v-bind:title="scoreColumns2[i]">
+                                <label v-bind:for="`assurance-`+i" class="stars" v-on:click="onClick('assurance', i)" v-on:mouseenter="onHoverStar('assurance', i)" v-on:mouseleave="onExitStar('assurance')" v-bind:data-on="isStarHighlighted('assurance', i)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z" /></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z" /></svg>
+                                    <input v-model="assurance" type="radio" name="assurance" v-bind:id="`assurance-`+i" v-bind:value="scores2[i]" required>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row mb-3">
+                        <div class="col-md-4 col-12">
+                            <div>Outcome</div>
+                            <div class="help">
+                                <em><small>Achieving the intended outcome of the service</small></em>
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-12 d-flex justify-content-between">
+                            <div class="text-center" v-for="(star, i) in scoring.outcome.stars" v-bind:title="scoreColumns2[i]">
+                                <label v-bind:for="`outcome-`+i" class="stars" v-on:click="onClick('outcome', i)" v-on:mouseenter="onHoverStar('outcome', i)" v-on:mouseleave="onExitStar('outcome')" v-bind:data-on="isStarHighlighted('outcome', i)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z" /></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="65" height="65"><path fill="currentColor" d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z" /></svg>
+                                    <input v-model="outcome" type="radio" name="outcome" v-bind:id="`outcome-`+i" v-bind:value="scores2[i]" required>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="comments" class="mr-1">Suggestions/Compliments/Comments <em>(${charLength} characters left)</em></label>
+                    <textarea v-on:input="limitChars(400, $event)" v-on:change="limitChars(400, $event)" v-model="comments" name="comments" id="comments" class="form-control" required></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <!-- <div class="cf-turnstile" data-sitekey="0x4AAAAAAADaxF-IHbsdGFvm" data-callback="onTurnstile" data-size="normal"></div> -->
+                    </div>
+                    <div class="col-md-12 text-center">
+                        <button class="btn btn-lg btn-primary">Submit Survey</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<!-- <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script> -->
+<script>
+    const vApp = new Vue({
+        el: '#vApp',
+        delimiters: ["${", "}"],
+        mixins: [],
+        data: {
+            errors: {
+                date: false,
+                service: false,
+            },
+            scores: [2, 4, 6, 8, 10],
+            scores2: [1, 2, 3, 4, 5],
+            scoreColumns: [
+                'Needs Improvement',
+                'Good',
+                'Satisfactory',
+                'Very Satisfactory',
+                'Outstanding',
+            ],
+            scoreColumns2: [
+                'Very Dissatisfied',
+                'Dissatisfied',
+                'Neither Satisfied nor Dissatisfied',
+                'Satisfied',
+                'Very Satisfied',
+            ],
+            scoring: {
+                patient: {
+                    name: 'Patient',
+                    score: -1,
+                    timer: null,
+                    // stars: [1, 1, 1, 1, 1],
+                    stars: [0, 0, 0, 0, 0],
+                },
+                enthusiastic: {
+                    name: 'Enthusiastic',
+                    score: -1,
+                    timer: null,
+                    stars: [0, 0, 0, 0, 0],
+                },
+                responsive: {
+                    name: 'responsive',
+                    score: -1,
+                    timer: null,
+                    stars: [0, 0, 0, 0, 0],
+                },
+                friendly: {
+                    name: 'friendly',
+                    score: -1,
+                    timer: null,
+                    stars: [0, 0, 0, 0, 0],
+                },
+                
+                responsiveness: {
+                    name: 'responsiveness',
+                    score: -1,
+                    timer: null,
+                    stars: [0, 0, 0, 0, 0],
+                },
+                reliability: {
+                    name: 'reliability',
+                    score: -1,
+                    timer: null,
+                    stars: [0, 0, 0, 0, 0],
+                },
+                access: {
+                    name: 'access',
+                    score: -1,
+                    timer: null,
+                    stars: [0, 0, 0, 0, 0],
+                },
+                communication: {
+                    name: 'communication',
+                    score: -1,
+                    timer: null,
+                    stars: [0, 0, 0, 0, 0],
+                },
+                costs: {
+                    name: 'costs',
+                    score: -1,
+                    timer: null,
+                    stars: [0, 0, 0, 0, 0],
+                },
+                integrity: {
+                    name: 'integrity',
+                    score: -1,
+                    timer: null,
+                    stars: [0, 0, 0, 0, 0],
+                },
+                assurance: {
+                    name: 'assurance',
+                    score: -1,
+                    timer: null,
+                    stars: [0, 0, 0, 0, 0],
+                },
+                outcome: {
+                    name: 'outcome',
+                    score: -1,
+                    timer: null,
+                    stars: [0, 0, 0, 0, 0],
+                }
+            },
+            starScore: 0,
+            starScoreHover: 0,
+            pending: false,
+            anonymous: false,
+            name: '',
+            dateVisited: '{{dateVisited}}',
+            respondentSelect: '',
+            respondent: '',
+            birthDate: '',
+            gender: '',
+            contact: '',
+            service: [],
+            serviceOthers:'',
+
+            howLong: '',
+            answerQuality: '',
+            environment: '',
+
+            patient: '',
+            enthusiastic: '',
+            responsive: '',
+            friendly: '',
+
+            responsiveness: '',
+            reliability: '',
+            access: '',
+            communication: '',
+            costs: '',
+            integrity: '',
+            assurance: '',
+            outcome: '',
+
+            comments: '',
+            charLength: 400,
+        },
+        computed: {
+            showHelp: function () {
+                if (this.help) {
+                    return 'show-help'
+                }
+                return 'no-help'
+            },
+            respondentShow: function () {
+                return (this.respondentSelect === 'Others' ? 'text' : 'hidden')
+            },
+            
+        },
+        mounted: function () {
+            this.charLength = 400 - ((this.comments + '').split('').length)
+
+            // this.name = 'Juan Cruz'
+            // this.contact = '090101111111'
+            // this.dateVisited = '2023-01-01'
+            // this.respondentSelect = 'Staff'
+            // this.birthDate = '1990-01-01'
+            // this.gender = 'Male'
+            // this.service = []
+            // this.howLong = 'Immediately'
+            // this.answerQuality = 'Gave a good solution'
+            // this.environment = 'Very clean'
+            // this.patient = "10"
+            // this.enthusiastic = "10"
+            // this.responsive = "10"
+            // this.friendly = "10"
+            // this.responsiveness = "5"
+            // this.reliability = "5"
+            // this.access = "5"
+            // this.communication = "5"
+            // this.costs = "5"
+            // this.integrity = "5"
+            // this.assurance = "5"
+            // this.outcome = "5"
+            // this.comments = "asas"
+            // for (o in this.scoring){
+            //     Vue.set(this.scoring[o], 'stars',[1,1,1,1,1])
+            // }
+        },
+        methods: {
+            limitChars: function (max, e) {
+                if (e.target.value.length >= max) {
+                    this.comments = e.target.value.substring(0, max);
+                }
+                this.charLength = 400 - ((this.comments + '').split('').length)
+            },
+            isStarHighlighted: function(id, number) {
+                return this.scoring[id].stars[number] 
+            },
+            onClick: function(id, number) {
+                this.scoring[id].score = number
+            },
+            onHoverStar: function(id, number) {
+                let timer = this.scoring[id].timer;
+
+                if(this.scoring[id].timer){
+                    clearTimeout(this.scoring[id].timer)
+                }
+                for(let x = 0; x < 5; x++){
+                    if(x <= number){
+                        Vue.set(this.scoring[id].stars, x, 1)
+                    } else {
+                        Vue.set(this.scoring[id].stars, x, 0)
+                    }
+                }
+            },
+            onExitStar: function(id) {
+                const ME = this;
+               
+                this.scoring[id].timer = setTimeout(function(){
+                    for(let x = 0; x < 5; x++){
+                        if(x <= ME.scoring[id].score){
+                            Vue.set(ME.scoring[id].stars, x, 1)
+                        } else {
+                            Vue.set(ME.scoring[id].stars, x, 0)
+                        }
+                    }
+                }, 200)
+            },
+            onSubmit: function () {
+                try {
+                    const me = this;
+                    Object.keys(this.$data).forEach(key => {
+                        if(typeof this[key] === 'string'){
+                            this[key] = this[key].trim()
+                        }
+                    });
+
+                    if (me.service.length <= 0) {
+                        me.errors['service'] = true
+                        throw new Error('Please specify Service Availed.')
+                    } else {
+                        if(me.service.includes('Others') && !me.serviceOthers){
+                            me.errors['service'] = true
+                            throw new Error('Please specify the other services.')
+                        }
+                    }
+                    me.pending = true;
+                    me.$nextTick(function () {
+                        me.$refs.form.submit();
+                    });
+                } catch (err) {
+                    alert(err)
+                }
+            }
+        }
+    });
+    function onTurnstile(token) {
+        vApp.token = token
+    }
+</script>
+{% endblock %}

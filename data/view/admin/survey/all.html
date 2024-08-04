@@ -1,0 +1,50 @@
+{% extends "document.html" %}
+{% block body %}
+<div class="row">
+    <div class="col-12 pt-5">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/gaccount/all">GSU Account Requests</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active font-weight-bold" href="/admin/survey/all">Surveys</a>
+            </li>
+        </ul>
+        <div class="tab-content p-3" style="border-radius:0 0 5px 5px;">
+            {% include 'parts/flash.html' %}
+            <div class="row mb-3 align-items-center">
+                <div class="col-md-6">
+                </div>
+                <div class="col-md-6">
+                    <form action="/admin/survey/all">
+                        <input value="{{s}}" type="search" placeholder="Search" name="s" class="form-control">
+                    </form>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-sm table-striped mb-0">
+                    <tr>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Contact</th>
+                        <th></th>
+                    </tr>
+                    {% for survey in surveys %}
+                        <tr>
+                            <td>{{survey.dateVisited|format_date('MMM DD, YYYY')}}</td>
+                            <td>{{survey.name}}</td>
+                            <td>{{survey.contact}}</td>
+                            <td>
+                                <a href="/admin/survey/{{survey.id}}/download">Download</a> | <a class="text-danger font-weight-bold" href="/admin/survey/{{survey.id}}/delete">✗</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+{% endblock %}

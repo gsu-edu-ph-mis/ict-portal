@@ -1,0 +1,60 @@
+{% extends "document.html" %}
+{% block body %}
+<div class="row">
+    <div class="col-12 pt-5">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active font-weight-bold" href="/admin/gaccount/all">GSU Account Requests</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/survey/all">Surveys</a>
+            </li>
+        </ul>
+        <div class="tab-content p-3" style="border-radius:0 0 5px 5px;">
+            {% include 'parts/flash.html' %}
+            <div class="row mb-3 align-items-center">
+                <div class="col-md-6">
+                </div>
+                <div class="col-md-6">
+                    <form action="/admin/gaccount/all">
+                        <input value="{{s}}" type="search" placeholder="Search" name="s" class="form-control">
+                    </form>
+                </div>
+            </div>
+            <div class="table-responsive mb-0">
+                <table class="table table-sm table-striped mb-0">
+                    <tr>
+                        <th width="5%">Ref #</th>
+                        <th width="15%" class="d-none d-md-table-cell">Created</th>
+                        <th width="10%" class="d-none d-md-table-cell">Type</th>
+                        <th>First Name</th>
+                        <th>Middle Name</th>
+                        <th>Last Name</th>
+                        <th class="d-none d-md-table-cell">Email</th>
+                        <th class="d-none d-md-table-cell">Mobile No.</th>
+                        <th width="20%"></th>
+                    </tr>
+                    {% for row in rows %}
+                        <tr>
+                            <td class="small d-none d-md-table-cell">{{row.uid}}</td>
+                            <td class="small d-none d-md-table-cell">{{row.createdAt|format_date('MMM DD, YYYY hh:mm A')}}</td>
+                            <td class="small">{{row.accountType}}</td>
+                            <td>{{row.firstName}}</td>
+                            <td>{{row.middleName}}</td>
+                            <td>{{row.lastName}}</td>
+                            <td>{{row.email}}</td>
+                            <td>{{row.mobileNumber}}</td>
+                            <td class="text-right">
+                                <a href="https://icto.gsu.edu.ph/services/gw_form.php?accountType={{row.accountType}}&idNumber={{row.idNumber}}&firstName={{row.firstName}}&middleName={{row.middleName}}&lastName={{row.lastName}}&email={{row.email}}&mobileNumber={{row.mobileNumber}}" target="_blank">Process</a> | <a class="text-danger font-weight-bold" href="/admin/gaccount/delete/{{row.id}}">✗</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+{% endblock %}

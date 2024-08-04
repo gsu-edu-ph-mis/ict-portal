@@ -1,0 +1,40 @@
+{
+  "name": "ict-portal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "set NODE_ENV=dev&& node ./scripts/open.js&& nodemon --ignore data/view/ --ignore data/public/ --ignore data/log/ --ignore data/upload/ index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.465.0",
+    "@aws-sdk/s3-request-presigner": "3.410",
+    "acrb": "^0.1.0",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "express-session-sequelize": "^2.3.0",
+    "google-auth-library": "^8.7.0",
+    "guess-file-type": "^1.0.1",
+    "kisapmata": "^1.2.1",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "nodemailer": "^6.9.1",
+    "nunjucks": "^3.2.3",
+    "nunjucks-filters": "github:kosinix/nunjucks-filters",
+    "pigura": "^1.0.1",
+    "qr-image": "^3.2.0",
+    "sequelize": "^6.29.2",
+    "sharp": "^0.32.6",
+    "sqlite3": "^5.1.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "open": "^8.4.2"
+  }
+}

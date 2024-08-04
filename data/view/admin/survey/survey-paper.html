@@ -1,0 +1,565 @@
+{% extends "document-print.html" %}
+{% block body %}
+<div class="col-md-12 doc-rating" >
+    <div class="row align-items-center mb-3 header">
+        <div class="col-3 text-right">
+            <img src="/images/logo-md.png" alt="">
+        </div>
+        <div class="col-4 text-center">
+            <p class="mb-0">Republic of the Philippines</p>
+            <p class="mb-0 font-weight-bold">GUIMARAS STATE UNIVERSITY</p>
+            <p class="mb-0">Mc Lain, Buenavista, Guimaras</p>
+        </div>
+        <div class="col-5 d-flex">
+            <div class="pl-1 pr-1">
+                <img src="/images/pab.jpg" alt="PAB">
+            </div>
+            <div class="pl-1 pr-1">
+                <table class="document-code mb-1">
+                    <tr>
+                        <th>Document Code No.</th>
+                    </tr>
+                    <tr>
+                        <td>FM-SCM-GSU-CSS-01</td>
+                    </tr>
+                </table>
+                <table class="document-code mb-1">
+                    <tr>
+                        <th>Rev. No.</th>
+                        <th>Effective Date</th>
+                        <th>Page No.</th>
+                    </tr>
+                    <tr>
+                        <td>02</td>
+                        <td>05 SEPT 2022</td>
+                        <td>1 of 1</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="d-md-block d-print-block">
+        <h1 class="text-center h1">CLIENT SATISFACTION SURVEY (CSS) FORM</h1>
+        <h2 class="h2">I. Respondent’s Profile</h2>
+        <p>Direction: Kindly fill in or check (√) the needed information. Please answer honestly and sincerely and do not leave item/s unanswered. Be assured that your answers will be kept highly confidential.</p>
+        <div class="row mb-3">
+            <div class="col-6">
+                <div>Name <small>(Optional)</small> <span class="box-underline min-w-300">{{survey.name}}</span></div>
+            </div>
+            <div class="col-6">
+                <div>Date Visited <small>(mm/dd/yyyy)</small> <span class="box-underline min-w-100">{{survey.dateVisited|format_date('MM/DD/YYYY')}}</span></div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12 d-flex align-items-center">
+                <div class="mr-3">
+                    Type of Respondent:
+                </div> 
+                <div class="d-flex justify-content-between boxes">
+                    <div>
+                        <span class="box">{% if survey.respondentSelect === 'Student' %}✓{% endif %}</span> <span>Student</span>
+                    </div> 
+                    <div>
+                        <span class="box">{% if survey.respondentSelect === 'Parent' %}✓{% endif %}</span> <span>Parent</span>
+                    </div>
+                    <div>
+                        <span class="box">{% if survey.respondentSelect === 'Stakeholder' %}✓{% endif %}</span> <span>Stakeholder</span>
+                    </div> 
+                    <div>
+                        <span class="box">{% if survey.respondentSelect === 'Faculty' %}✓{% endif %}</span> <span>Faculty</span>
+                    </div> 
+                    <div>
+                        <span class="box">{% if survey.respondentSelect === 'Staff' %}✓{% endif %}</span> <span>Staff</span>
+                    </div> 
+                    <div>
+                        <span class="box">{% if survey.respondentSelect === 'Others' %}✓{% endif %}</span> <div><span>Others, (Please specify):</span> <span class="box-underline min-w-100">{{survey.respondent}}</span></div>
+                    </div>     
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-4">Age: <span class="box-underline min-w-100">{{survey.birthDate|age}} <small>years old</small></span></div>
+            <div class="col-4 d-flex align-items-center">
+                <div class="mr-3">
+                    Sex:
+                </div> 
+                <div class="d-flex justify-content-between boxes">
+                    <div>
+                        <span class="box">{% if survey.gender === 'Male' %}✓{% endif %}</span> <span>Male</span>
+                    </div> 
+                    <div>
+                        <span class="box">{% if survey.gender === 'Female' %}✓{% endif %}</span> <span>Female</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">Contact No. (Optional):<span class="box-underline min-w-100">{{survey.contact}}</span></div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-12">Office Visited: <span class="box-underline min-w-500">Information and Communications Technology Unit (ICTU)</span></div>
+            <div class="col-12">Service Availed: <span class="box-underline min-w-500">{{survey.service}}</span></div>
+        </div>
+        <h2 class="h2">II. Client Satisfaction Rating</h2>
+        <p>Direction:  Kindly rate the quality of service provided by checking (√) the appropriate box.</p>
+        
+        <table class="table-rating mb-3">
+            <tr>
+                <th width="34%">Communication</th>
+                <th colspan="3">Criteria</th>
+            </tr>
+            <tr>
+                <td> 
+                    <ul class="mb-0">
+                        <li>How long will the concerned staff/office respond to your concern/query?</li>
+                    </ul>
+                </td>
+                <td>
+                    <span class="box box2">{% if survey.howLong === 'Immediately' %}✓{% endif %}</span> <span>Immediately</span>
+                </td>
+                <td>
+                    <span class="box box2">{% if survey.howLong === 'More than 1 hour' %}✓{% endif %}</span> <span>More than 1 hour</span>
+                </td>
+                <td>
+                    <span class="box box2">{% if survey.howLong === 'More than a day' %}✓{% endif %}</span> <span>More than a day</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <ul class="mb-0">
+                        <li>Was your concern given utmost attention and feedback?</li>
+                    </ul>
+                </td>
+                <td>
+                    <span class="box box2">{% if survey.answerQuality === 'Gave a good solution' %}✓{% endif %}</span> <span>Gave a good solution</span>
+                </td>
+                <td>
+                    <span class="box box2">{% if survey.answerQuality === 'Gave unclear answers' %}✓{% endif %}</span> <span>Gave unclear answers</span>
+                </td>
+                <td>
+                    <span class="box box2">{% if survey.answerQuality === "Couldn't solve the concern" %}✓{% endif %}</span> <span>Couldn't solve the concern</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <ul class="mb-0">
+                        <li>How was the environment of the visited office?</li>
+                    </ul>
+                </td>
+                <td>
+                    <span class="box box2">{% if survey.environment === 'Very clean' %}✓{% endif %}</span> <span>Very clean</span>
+                </td>
+                <td>
+                    <span class="box box2">{% if survey.environment === 'Not so clean' %}✓{% endif %}</span> <span>Not so clean</span>
+                </td>
+                <td>
+                    <span class="box box2">{% if survey.environment === "Needs improvement" %}✓{% endif %}</span> <span>Needs improvement</span>
+                </td>
+            </tr>
+        </table>
+
+        <table class="table-rating mb-3">
+            <tr>
+                <th width="37%"><h2 class="h2 mb-0">Characteristic of concerned Personnel</h2></th>
+                <th>
+                    <div>10</div>
+                    <div>(Outstanding)</div>
+                </th>
+                <th>
+                    <div>8</div>
+                    <div>(Very
+                        Satisfactory)</div>
+                </th>
+                <th>
+                    <div>6</div>
+                    <div>(Satisfactory)</div>
+                </th>
+                <th>
+                    <div>4</div>
+                    <div>(Good)</div>
+                </th>
+                <th>
+                    <div>2</div>
+                    <div>(Needs Improvement)</div>
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    <ul class="mb-0">
+                        <li>Patient</li>
+                    </ul>
+                </td>
+                <td class="text-center">{% if survey.patient === '10' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.patient === '8' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.patient === '6' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.patient === '4' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.patient === '2' %}✓{% endif %}</td>
+            </tr>
+            <tr>
+                <td>
+                    <ul class="mb-0">
+                        <li>Enthusiastic</li>
+                    </ul>
+                </td>
+                <td class="text-center">{% if survey.enthusiastic === '10' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.enthusiastic === '8' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.enthusiastic === '6' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.enthusiastic === '4' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.enthusiastic === '2' %}✓{% endif %}</td>
+            </tr>
+            <tr>
+                <td>
+                    <ul class="mb-0">
+                        <li>Responsive/Listened carefully</li>
+                    </ul>
+                </td>
+                <td class="text-center">{% if survey.responsive === '10' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.responsive === '8' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.responsive === '6' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.responsive === '4' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.responsive === '2' %}✓{% endif %}</td>
+            </tr>
+            <tr>
+                <td>
+                    <ul class="mb-0">
+                        <li>Friendly/ Courteous</li>
+                    </ul>
+                </td>
+                <td class="text-center">{% if survey.friendly === '10' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.friendly === '8' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.friendly === '6' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.friendly === '4' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.friendly === '2' %}✓{% endif %}</td>
+            </tr>
+        </table>
+
+        <table class="table-rating table-service-quality mb-3">
+            <tr class="text-center">
+                <th><h2 class="h2 mb-0">Service Quality Dimensions</h2></th>
+                <th>Very Satisfied (5)</th>
+                <th>Satisfied (4)</th>
+                <th>Neither Satisfied nor Dissatisfied (3)</th>
+                <th>Dissatisfied (2)</th>
+                <th>Very Dissatisfied (1)</th>
+            </tr>
+            <tr>
+                <td>
+                    <h2 class="h6 mb-0">1. RESPONSIVENESS</h2>
+                    <div>Willingness to help, assist and provide prompt service</div>
+                </td>
+                <td class="text-center">{% if survey.reliability === '5' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.reliability === '4' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.reliability === '3' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.reliability === '2' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.reliability === '1' %}✓{% endif %}</td>
+            </tr>
+            <tr>
+                <td>
+                    <h2 class="h6 mb-0">2. RELIABILITY</h2>
+                    <div>Provide what is needed and what was promised following the policy and standards</div>
+                </td>
+                <td class="text-center">{% if survey.reliability === '5' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.reliability === '4' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.reliability === '3' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.reliability === '2' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.reliability === '1' %}✓{% endif %}</td>
+            </tr>
+            <tr>
+                <td>
+                    <h2 class="h6 mb-0">3. ACCESS AND FACILITIES</h2>   
+                    <div>Convenience of location, ample amenities for comfortable transactions and uses clear signage</div>
+                </td>
+                <td class="text-center">{% if survey.access === '5' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.access === '4' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.access === '3' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.access === '2' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.access === '1' %}✓{% endif %}</td>
+            </tr>
+            <tr>
+                <td>
+                    <h2 class="h6 mb-0">4. COMMUNICATION</h2>
+                    <div>Keeping clients informed in a language they can easily understand and listening to their feedback</div>
+                </td>
+                <td class="text-center">{% if survey.communication === '5' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.communication === '4' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.communication === '3' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.communication === '2' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.communication === '1' %}✓{% endif %}</td>
+            </tr>
+            <tr>
+                <td>
+                    <h2 class="h6 mb-0">5. COSTS</h2>
+                    <div>Qualitative information on the cost of each service and billing process/es</div>
+                </td>
+                <td class="text-center">{% if survey.costs === '5' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.costs === '4' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.costs === '3' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.costs === '2' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.costs === '1' %}✓{% endif %}</td>
+            </tr>
+            <tr>
+                <td>
+                    <h2 class="h6 mb-0">6. INTEGRITY</h2>
+                    <div>There is honesty, justice, fairness and trust in each service while dealing with clients</div>
+                </td>
+                <td class="text-center">{% if survey.integrity === '5' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.integrity === '4' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.integrity === '3' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.integrity === '2' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.integrity === '1' %}✓{% endif %}</td>
+            </tr>
+            <tr>
+                <td>
+                    <h2 class="h6 mb-0">7. ASSURANCE</h2>
+                    <div>Perform their duties, understanding client needs, helpfulness and good work relationships</div>
+                </td>
+                <td class="text-center">{% if survey.assurance === '5' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.assurance === '4' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.assurance === '3' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.assurance === '2' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.assurance === '1' %}✓{% endif %}</td>
+            </tr>
+            <tr>
+                <td>
+                    <h2 class="h6 mb-0">8. OUTCOME</h2>
+                    <div>Achieving the intended outcome of the service</div>
+                </td>
+                <td class="text-center">{% if survey.outcome === '5' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.outcome === '4' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.outcome === '3' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.outcome === '2' %}✓{% endif %}</td>
+                <td class="text-center">{% if survey.outcome === '1' %}✓{% endif %}</td>
+            </tr>
+        </table>
+        <h2 class="h2">III. Suggestions/Compliments/Comments</h2>
+        <p class="box-underline" style="width: 100%;">{{survey.comments}}</p>
+        <h2 class="h2 text-center">Thank you for your valuable inputs to help us continuously improve our services!</h2>
+
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<!-- <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script> -->
+<script>
+    const vApp = new Vue({
+        el: '#vApp',
+        delimiters: ["${", "}"],
+        mixins: [],
+        data: {
+            errors: {
+                date: false,
+            },
+            scores: [2, 4, 6, 8, 10],
+            scores2: [1, 2, 3, 4, 5],
+            scoreColumns: [
+                'Needs Improvement',
+                'Good',
+                'Satisfactory',
+                'Very Satisfactory',
+                'Outstanding',
+            ],
+            scoreColumns2: [
+                'Very Dissatisfied',
+                'Dissatisfied',
+                'Neither Satisfied nor Dissatisfied',
+                'Satisfied',
+                'Very Satisfied',
+            ],
+            scoring: {
+                patient: {
+                    name: 'Patient',
+                    score: -1,
+                    timer: null,
+                    // stars: [1, 1, 1, 1, 1],
+                    stars: [0, 0, 0, 0, 0],
+                },
+                enthusiastic: {
+                    name: 'Enthusiastic',
+                    score: -1,
+                    timer: null,
+                    stars: [0, 0, 0, 0, 0],
+                },
+                responsive: {
+                    name: 'responsive',
+                    score: -1,
+                    timer: null,
+                    stars: [0, 0, 0, 0, 0],
+                },
+                friendly: {
+                    name: 'friendly',
+                    score: -1,
+                    timer: null,
+                    stars: [0, 0, 0, 0, 0],
+                },
+                
+                responsiveness: {
+                    name: 'responsiveness',
+                    score: -1,
+                    timer: null,
+                    stars: [0, 0, 0, 0, 0],
+                },
+                reliability: {
+                    name: 'reliability',
+                    score: -1,
+                    timer: null,
+                    stars: [0, 0, 0, 0, 0],
+                },
+                access: {
+                    name: 'access',
+                    score: -1,
+                    timer: null,
+                    stars: [0, 0, 0, 0, 0],
+                },
+                communication: {
+                    name: 'communication',
+                    score: -1,
+                    timer: null,
+                    stars: [0, 0, 0, 0, 0],
+                },
+                costs: {
+                    name: 'costs',
+                    score: -1,
+                    timer: null,
+                    stars: [0, 0, 0, 0, 0],
+                },
+                integrity: {
+                    name: 'integrity',
+                    score: -1,
+                    timer: null,
+                    stars: [0, 0, 0, 0, 0],
+                },
+                assurance: {
+                    name: 'assurance',
+                    score: -1,
+                    timer: null,
+                    stars: [0, 0, 0, 0, 0],
+                },
+                outcome: {
+                    name: 'outcome',
+                    score: -1,
+                    timer: null,
+                    stars: [0, 0, 0, 0, 0],
+                }
+            },
+            starScore: 0,
+            starScoreHover: 0,
+            pending: false,
+            anonymous: false,
+            name: '',
+            dateVisited: '{{dateVisited}}',
+            respondentSelect: '',
+            respondent: '',
+            birthDate: '',
+            gender: '',
+            contact: '',
+            service: '',
+
+            howLong: '',
+            answerQuality: '',
+            environment: '',
+
+            patient: '',
+            enthusiastic: '',
+            responsive: '',
+            friendly: '',
+
+            responsiveness: '',
+            reliability: '',
+            access: '',
+            communication: '',
+            costs: '',
+            integrity: '',
+            assurance: '',
+            outcome: '',
+
+            comments: '',
+        },
+        computed: {
+            showHelp: function () {
+                if (this.help) {
+                    return 'show-help'
+                }
+                return 'no-help'
+            },
+            respondentShow: function () {
+                return (this.respondentSelect === 'Others' ? 'text' : 'hidden')
+            },
+            
+        },
+        mounted: function () {
+            this.name = 'Juan Cruz'
+            this.contact = '090101111111'
+            this.dateVisited = '2023-01-01'
+            this.respondentSelect = 'Staff'
+            this.birthDate = '1990-01-01'
+            this.gender = 'Male'
+            this.service = 'Tarp'
+            this.howLong = 'Immediately'
+            this.answerQuality = 'Gave a good solution'
+            this.environment = 'Very clean'
+            this.patient = "10"
+            this.enthusiastic = "10"
+            this.responsive = "10"
+            this.friendly = "10"
+            this.responsiveness = "5"
+            this.reliability = "5"
+            this.access = "5"
+            this.communication = "5"
+            this.costs = "5"
+            this.integrity = "5"
+            this.assurance = "5"
+            this.outcome = "5"
+            this.comments = "asas"
+            for (o in this.scoring){
+                Vue.set(this.scoring[o], 'stars',[1,1,1,1,1])
+            }
+        },
+        methods: {
+            isStarHighlighted: function(id, number) {
+                return this.scoring[id].stars[number] 
+            },
+            onClick: function(id, number) {
+                this.scoring[id].score = number
+            },
+            onHoverStar: function(id, number) {
+                let timer = this.scoring[id].timer;
+
+                if(this.scoring[id].timer){
+                    clearTimeout(this.scoring[id].timer)
+                }
+                for(let x = 0; x < 5; x++){
+                    if(x <= number){
+                        Vue.set(this.scoring[id].stars, x, 1)
+                    } else {
+                        Vue.set(this.scoring[id].stars, x, 0)
+                    }
+                }
+            },
+            onExitStar: function(id) {
+                const ME = this;
+               
+                this.scoring[id].timer = setTimeout(function(){
+                    for(let x = 0; x < 5; x++){
+                        if(x <= ME.scoring[id].score){
+                            Vue.set(ME.scoring[id].stars, x, 1)
+                        } else {
+                            Vue.set(ME.scoring[id].stars, x, 0)
+                        }
+                    }
+                }, 200)
+            },
+            onSubmit: function () {
+                const ME = this;
+                ME.pending = true;
+                ME.$nextTick(function () {
+                    ME.$refs.form.submit();
+                });
+            }
+        }
+    });
+    function onTurnstile(token) {
+        vApp.token = token
+    }
+</script>
+{% endblock %}

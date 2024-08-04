@@ -1,0 +1,64 @@
+{
+  "app": {
+    "title": "ICT Portal",
+    "description": "ICT Portal - Guimaras State University",
+    "port": "9102",
+    "url": "http://localhost:9102",
+    "dir": "${APP_DIR}",
+    "dirs": {
+      "data": "${APP_DIR}/data",
+      "src": "${APP_DIR}/src",
+      "public": "${APP_DIR}/data/public",
+      "view": "${APP_DIR}/data/view",
+      "upload": "${APP_DIR}/data/upload"
+    }
+  },
+  "school": {
+    "name": "Guimaras State University",
+    "acronym": "GSU"
+  },
+  "express": {
+    "trustProxy": false
+  },
+  "nunjucks": {
+    "loader": {
+      "watch": false,
+      "noCache": true
+    },
+    "environment": {
+      "autoescape": true,
+      "throwOnUndefined": false,
+      "trimBlocks": false,
+      "lstripBlocks": false
+    }
+  },
+  "session": {
+    "name": "gsu_ict_portal_app_sid",
+    "store": {
+      "db": "sessions.db",
+      "dir": "${APP_DIR}/data"
+    },
+    "cookie": {
+      "httpOnly": false,
+      "maxAge": 31536000000,
+      "secure": false
+    }
+  },
+  "sqlite": {
+    "username": "",
+    "db": "${APP_DIR}/data/app.db"
+  },
+  "aws": {
+    "region": "ap-southeast-1",
+    "bucket1": {
+      "name": "ph-gsu-ict",
+      "url": "https://ph-gsu-ict.s3-ap-southeast-1.amazonaws.com/files-dev/",
+      "prefix": "files-dev"
+    }
+  },
+  "recaptchav3": {
+    "enable": true,
+    "clientKey": "6LdZ4B4qAAAAAIJlZFVB1-dMraZJvcMotuEZ3JLK"
+  },
+  "loginDelay": 0
+}

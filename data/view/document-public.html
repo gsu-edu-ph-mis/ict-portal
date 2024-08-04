@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="{{app.description}}">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>{{app.title}}</title>
+
+    <!-- Bootstrap -->
+    <link rel="shortcut icon" href="{{app.url}}/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Poppins:wght@100;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{app.url}}/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="{{app.url}}/css/style.css" />
+</head>
+<body class="body-public bg-animated">
+<div class="container-fluid">
+    <div class="row">
+        {% block body %}{% endblock %}
+    </div>
+</div>
+{% block scripts %}
+<script src="{{app.url}}/js/jquery.slim.min.js"></script>
+<!-- <script src="{{app.url}}/js/popper.min.js"></script> -->
+<script src="{{app.url}}/js/bootstrap.min.js"></script>
+<!-- <script src="{{app.url}}/js/lodash.min.js"></script> -->
+<script src="{{app.url}}/js/vue.js"></script>
+{% endblock %}
+</html>

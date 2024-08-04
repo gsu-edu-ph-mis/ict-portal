@@ -1,0 +1,110 @@
+{% extends "document-public.html" %}
+
+{% block body %}
+<div class="container container-first height-medium">
+    <div class="row">
+        <div class="col-md-5 ml-auto mr-auto pt-5 login-height">
+            <div class="login-form" id="vApp" v-cloak>
+                <div class="text-center position-relative mb-4">
+                    <!-- <img class="position-relative" width="100" src="/images/logo-md2.png" alt="Guimaras State University" title="Guimaras State University"> -->
+                    <img class="position-relative" width="100" src="/images/logo-ictu.png" alt="Guimaras State University" title="Guimaras State University">
+                </div>
+                <h1 class="text-center h6 mb-4">ICT Portal</h1>
+                <div>
+                    {% include 'parts/flash.html' %}
+                    <form ref="form" v-on:submit.prevent="onSubmit" action="/login" method="POST" novalidate>
+                        
+
+                        <!-- <div class="form-group">
+                            <input v-bind:readonly="pending" placeholder="Username..." v-model="username" type="username" name="username" class="form-control" autocomplete="off">
+                            <small class="invalid-feedback">${getError('username')}</small>
+                        </div>
+                        <div class="form-group">
+                            <div class="toggled-password-group">
+                                <input v-bind:readonly="pending" placeholder="Password..." name="password" v-model="password" v-bind:type="passwordType" class="form-control" autocomplete="off">
+                                <button v-on:click="togglePassword" class="btn btn-eye d-flex align-items-center" v-bind:data-state="passwordType" type="button">
+                                    <svg style="width:18px;height:18px" viewBox="0 0 24 24"><path d="M11.83,9L15,12.16C15,12.11 15,12.05 15,12A3,3 0 0,0 12,9C11.94,9 11.89,9 11.83,9M7.53,9.8L9.08,11.35C9.03,11.56 9,11.77 9,12A3,3 0 0,0 12,15C12.22,15 12.44,14.97 12.65,14.92L14.2,16.47C13.53,16.8 12.79,17 12,17A5,5 0 0,1 7,12C7,11.21 7.2,10.47 7.53,9.8M2,4.27L4.28,6.55L4.73,7C3.08,8.3 1.78,10 1,12C2.73,16.39 7,19.5 12,19.5C13.55,19.5 15.03,19.2 16.38,18.66L16.81,19.08L19.73,22L21,20.73L3.27,3M12,7A5,5 0 0,1 17,12C17,12.64 16.87,13.26 16.64,13.82L19.57,16.75C21.07,15.5 22.27,13.86 23,12C21.27,7.61 17,4.5 12,4.5C10.6,4.5 9.26,4.75 8,5.2L10.17,7.35C10.74,7.13 11.35,7 12,7Z" /></svg>
+                                    <svg style="width:18px;height:18px" viewBox="0 0 24 24" ><path d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z" /></svg>
+                                </button>
+                            </div>
+                            <small class="invalid-feedback">${getError('password')}</small>
+                        </div>
+                        <input type="hidden" name="recaptchaToken" v-model="recaptchaToken">
+                        <div class="form-group mb-0">
+                            <button v-bind:disabled="disabled" class="btn btn-primary btn-full-width">${loginText}</button>
+                        </div>
+                        <div class="text-center mt-2 mb-2">
+                            <strong>OR</strong> <br>
+                            <small><em>Use your GSU Google account</em></small>
+                        </div> -->
+
+                        <div class="d-flex justify-content-center mb-1">
+                            <!-- {# See: https://developers.google.com/identity/gsi/web/tools/configurator #} -->
+                            <div id="g_id_onload"
+                                data-use_fedcm_for_prompt="true"
+                                data-client_id="1089280647908-51j47hevhq7k0c502vur2rf876itsrcb.apps.googleusercontent.com"
+                                data-context="signin"
+                                data-ux_mode="popup"
+                                data-login_uri="{{CONFIG.app.url}}/login"
+                                data-itp_support="true">
+                            </div>
+                            <div class="g_id_signin"
+                                data-type="standard"
+                                data-shape="rectangular"
+                                data-theme="filled_blue"
+                                data-text="continue_with"
+                                data-size="large"
+                                data-locale="en"
+                                data-logo_alignment="left">
+                            </div>
+                        </div>
+                        <p class="text-center pt-4">
+                            <small><em>* Use your GSU Google account</em></small>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+    const vApp = new Vue({
+        el: '#vApp',
+        delimiters: ["${", "}"],
+        data: {
+            pending: false,
+            username: '{{username}}',
+            password: '',
+            passwordType: 'password',
+            recaptchaToken: '',
+        },
+        computed: {
+            disabled: function(){
+                return (!this.username || !this.password || this.pending);
+            },
+            loginText: function(){
+                return this.pending ? 'Logging in...' : 'Login';
+            }
+        },
+        methods: {
+            togglePassword: function () {
+                if (this.passwordType === "password") {
+                    return this.passwordType = "text";
+                }
+                this.passwordType = "password"
+            },
+            onSubmit: function(){
+                const me = this;
+                me.pending = true;
+                me.$nextTick(function() {
+                    me.$refs.form.submit();
+                });
+            }
+        }
+    });
+</script>
+{% endblock %}

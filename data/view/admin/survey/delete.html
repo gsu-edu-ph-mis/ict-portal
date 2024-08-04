@@ -1,0 +1,18 @@
+{% extends "document.html" %}
+
+{% block body %}
+
+<div class="col-md-4 col-5 ml-auto mr-auto pt-5 login-height">
+    <div class="login-form text-center">
+        <h1 class="text-center text-danger h4 mb-4">Delete</h1>
+        <form action="/admin/survey/{{survey.id}}/delete" method="POST">
+            <input type="hidden" name="acsrf" value="{{acsrf}}">
+            <div>
+                <div class="alert alert-danger">Do you want to delete survey # {{survey.id}}</div>
+            </div>
+            <a href="/admin/survey/all" class="btn btn-primary">No</a>
+            <button class="btn btn-danger">Yes, Delete</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

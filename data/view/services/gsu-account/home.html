@@ -1,0 +1,187 @@
+{% extends "document.html" %}
+{% block body %}
+    <div class="row">
+        <div id="vApp" v-cloak v-bind:data-pending="pending" class="col-md-12 ml-auto mr-auto pt-3 pb-3 pt-md-5 pb-md-5" style="max-width:800px">
+            {% include 'parts/header.html' %}
+            <div class=" p-md-4 p-3 bg-glass" style="min-width: 300px;">
+                <h1 class="text-center h4">GSU Account</h1>
+                <h2 class="text-center h6 mb-4">(Google Workspace Account)</h2>
+                <form ref="form" v-on:submit.prevent="onSubmit" action="" method="POST">
+                    <h6 class="h6 mb-3">
+                        <span class="mr-2">Personal Information</span>
+                    </h6>
+                    <div class="form-group" v-bind:data-error="errors['accountType']" v-on:click="errors.accountType=false">
+                        <label for="accountType" class="mr-1">Account Type</label>
+                        <select v-model="accountType" name="accountType" id="accountType" class="form-control">
+                            <option value="">- SELECT -</option>
+                            <option value="Student">Student</option>
+                            <option value="Faculty">Faculty</option>
+                            <option value="Staff">Staff</option>
+                            <option value="Office">Office</option>
+                        </select>
+                    </div>
+                    <div class="form-group" v-bind:data-error="errors['idNumber']" v-on:click="errors.idNumber=false">
+                        <label for="idNumber" class="mr-1">ID Number</label>
+                        <input v-model="idNumber" name="idNumber" id="idNumber" type="text" class="form-control">
+                    </div>
+                    <div class="form-group" v-bind:data-error="errors['firstName']" v-on:click="errors.firstName=false">
+                        <label for="firstName" class="mr-1">First Name</label>
+                        <input v-model="firstName" name="firstName" id="firstName" type="text" class="form-control">
+                    </div>
+                    <div class="form-group text-right">
+                        
+                    </div>
+                    <div class="form-group" v-bind:data-error="errors['middleName']" v-on:click="errors.middleName=false">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label for="middleName" class="mr-1">Middle Name</label>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <div class="custom-control custom-switch">
+                                    <input v-model="noMiddle" type="checkbox" class="custom-control-input" id="help">
+                                    <label class="custom-control-label" for="help">I dont have a Middle Name</label>
+                                </div>
+                            </div>
+                        </div>
+                        <input v-model="middleName" name="middleName" id="middleName" type="text" class="form-control" :disabled="noMiddle">
+                    </div>
+                    <div class="form-group" v-bind:data-error="errors['lastName']" v-on:click="errors.lastName=false">
+                        <label for="lastName" class="mr-1">Last Name</label>
+                        <input v-model="lastName" name="lastName" id="lastName" type="text" class="form-control">
+                    </div>
+                    <hr>
+                    <h6 class="h6 mb-3">
+                        <span class="mr-2">Contact Information</span>
+                    </h6>
+                    <div class="form-group" v-bind:data-error="errors['email']" v-on:click="errors.email=false">
+                        <label for="email" class="mr-1">Alternative Email Address</label>
+                        <input v-model="email" name="email" id="email" type="email" class="form-control">
+                    </div>
+                    <div class="form-group" v-bind:data-error="errors['mobileNumber']" v-on:click="errors.mobileNumber=false">
+                        <label for="mobileNumber" class="mr-1">Mobile Number</label>
+                        <input v-model="mobileNumber" name="mobileNumber" id="mobileNumber" type="mobileNumber" class="form-control">
+                    </div>
+                    <input type="hidden" name="recaptchaToken" v-model="recaptchaToken">
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <!-- <div class="cf-turnstile" data-sitekey="0x4AAAAAAADaxF-IHbsdGFvm" data-callback="onTurnstile" data-size="normal"></div> -->
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <button class="btn btn-lg btn-primary">Submit Request</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="https://www.google.com/recaptcha/api.js?render=6LdZ4B4qAAAAAIJlZFVB1-dMraZJvcMotuEZ3JLK"></script>
+<!-- <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script> -->
+<script>
+    const vApp = new Vue({
+        el: '#vApp',
+        delimiters: ["${", "}"],
+        mixins: [],
+        data: {
+            recaptchaToken: '',
+            errors: {
+                accountType: false,
+                idNumber: false,
+                firstName: false,
+                middleName: false,
+                lastName: false,
+
+                email: false,
+                mobileNumber: false,
+            },
+            pending: false,
+            accountType: '',
+            idNumber: '',
+            firstName: '',
+            middleName: '',
+            noMiddle: false,
+            lastName: '',
+
+            email: '',
+            mobileNumber: '',
+            token: '', // turnstile token
+        },
+        computed: {
+           
+        },
+        watch: {
+           
+        },
+        mounted: function () {
+            this.accountType = 'Student'
+            this.idNumber = '2023-03-22'
+            this.firstName = 'Nico '
+            this.middleName = 'Gayapa'
+            this.lastName = ' Amarilla'
+            this.email = 'nico.amarilla@example.com'
+            this.mobileNumber = '09106189160'
+            
+            // this.onSubmit()
+        },
+        methods: {
+            onSubmit: function () {
+                try {
+                    const me = this;
+                    Object.keys(this.$data).forEach(key => {
+                        if(typeof this[key] === 'string'){
+                            this[key] = this[key].trim()
+                        }
+                    });
+                    if (!me.accountType) {
+                        me.errors['accountType'] = true
+                        throw new Error('Please specify the Account Type.')
+                    }
+                    if (!me.idNumber) {
+                        me.errors['idNumber'] = true
+                        throw new Error('Please specify the ID Number.')
+                    }
+                    if (!me.firstName) {
+                        me.errors['firstName'] = true
+                        throw new Error('Please specify the First Name.')
+                    }
+                    if (!me.middleName && !me.noMiddle) {
+                        me.errors['middleName'] = true
+                        throw new Error('Please specify the Middle Name.')
+                    }
+                    if (!me.lastName) {
+                        me.errors['lastName'] = true
+                        throw new Error('Please specify the Last Name.')
+                    }
+                    if (!me.email) {
+                        me.errors['email'] = true
+                        throw new Error('Please specify the Alternative Email.')
+                    }
+                    if (!me.mobileNumber) {
+                        me.errors['mobileNumber'] = true
+                        throw new Error('Please specify the Mobile Number.')
+                    }
+                    
+
+                    me.pending = true;
+                    grecaptcha.ready(function() {
+                        grecaptcha.execute('6LdZ4B4qAAAAAIJlZFVB1-dMraZJvcMotuEZ3JLK', {action: 'submit'}).then(function(token) {
+                            me.recaptchaToken = token;
+                            me.$nextTick(function() {
+                                me.$refs.form.submit();
+                            });
+                        });
+                    });
+
+                } catch (err) {
+                    alert(err)
+                }
+            }
+        }
+    });
+    function onTurnstile(token){
+        vApp.token = token
+    }
+</script>
+{% endblock %}

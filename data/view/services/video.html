@@ -1,0 +1,169 @@
+{% extends "document.html" %}
+
+{% block body %}
+<div id="vApp" v-cloak v-bind:data-pending="pending" class="row">
+    <div class="col-md-12 ml-auto mr-auto pt-5 pb-5 " style="max-width:800px">
+        {% include 'parts/header.html' %}
+        <div class=" p-md-4 p-3 bg-glass" style="min-width: 300px;">
+            <h1 class="text-center h4">Photo/Video Documentation</h1>
+            <h2 class="text-center h6 mb-4">Request Form</h2>
+            <form ref="form" v-on:submit.prevent="onSubmit" action="" method="POST">
+                <div class="form-group text-right">
+                    <div class="custom-control custom-switch">
+                        <input v-model="help" type="checkbox" class="custom-control-input" id="help">
+                        <label class="custom-control-label" for="help">Hiligaynon</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="event" class="mr-1">Event Name</label>
+                    <input v-model="event" name="event" id="event" type="text" class="form-control" required>
+                </div>
+                <div class="form-group" v-bind:data-error="errors['format']" v-on:click="errors.format=false">
+                    <label for="content" class="mr-1">Format</label>
+                    <em v-if="!help"><small>How do you want to record your event?</small></em>
+                    <em v-bind:class="showHelp"><small>Anu gusto mo na pag record?</small></em>
+                    <div class="form-group">
+                        <div class="custom-control custom-switch">
+                            <input v-model="format" name="format" value="Photos" type="checkbox" class="custom-control-input" id="photo">
+                            <label class="custom-control-label" for="photo">Photos</label>
+                        </div>
+                        <div class="custom-control custom-switch">
+                            <input v-model="format" name="format" value="Videos" type="checkbox" class="custom-control-input"
+                                id="video">
+                            <label class="custom-control-label" for="video">Videos</label>
+                        </div>
+                        <div class="custom-control custom-switch">
+                            <input v-model="format" name="format" value="Drone Shots" type="checkbox" class="custom-control-input"
+                                id="drone">
+                            <label class="custom-control-label" for="drone">Drone Shots</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" v-bind:data-error="errors['date']" v-on:click="errors.date=false">
+                    <label for="dateStart">Event Date</small></em></label>
+                    <div class="d-flex flex-wrap align-items-center text-center">
+                        <div class="pl-3 pr-3">
+                            From
+                        </div>
+                        <div class="d-flex">
+                            <input v-model="dateStart" name="dateStart" v-on:change="matchEnd" type="datetime-local" class="form-control" required>
+                        </div>
+                        <div class="pl-3 pr-3">
+                            to
+                        </div>
+                        <div class="d-flex">
+                            <input v-model="dateEnd" name="dateEnd" type="datetime-local" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="location" class="mr-1">Event Location</label>
+                    <input v-model="location" name="location" id="location" type="text" class="form-control" required>
+                </div>
+                <hr>
+                <h6 class="h6">Requesting Office</h6>
+                <div class="form-group">
+                    <label for="requestor" class="mr-1">Requesting Person's Name</label>
+                    <em v-bind:class="showHelp"><small>Ang pangalan sang naga patigayon.</small></em>
+                    <input v-model="requestor" name="requestor" id="requestor" type="text" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="department" class="mr-1">Department</label>
+                    <em v-bind:class="showHelp"><small>Ang iya na departamento?</small></em>
+                    <input v-model="department" name="department" id="department" type="text" class="form-control" required>
+                </div>
+                <hr>
+                <h6 class="h6 mb-3"><span class="mr-2">Contact Information</span><em v-if="!help"><small>Please
+                            provide a way for us to contact you.</small></em></h6>
+                <div class="form-group">
+                    <label for="email" class="mr-1">Email</label>
+                    <em v-bind:class="showHelp"><small>Aktibo na email.</small></em>
+                    <input v-model="email" name="email" id="email" type="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="fb" class="mr-1">Facebook or Messenger Name</label>
+                    <em v-bind:class="showHelp"><small>FB ukon Messenger.</small></em>
+                    <input v-model="fb" name="fb" id="fb" type="fb" class="form-control" required>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-lg btn-primary">Submit Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+    var vApp = new Vue({
+        el: '#vApp',
+        delimiters: ["${", "}"],
+        mixins: [],
+        data: {
+            errors: {
+                format: false,
+                date: false,
+                location: false,
+            },
+            pending: false,
+            help: false,
+            event: '',
+            format: [],
+            dateStart: '',
+            dateEnd: '',
+            location: '',
+            requestor: '',
+            department: '',
+            email: '',
+            fb: '',
+        },
+        computed: {
+            showHelp: function () {
+                if (this.help) {
+                    return 'show-help'
+                }
+                return 'no-help'
+            }
+        },
+        mounted: function() {
+            // this.event = 'Graduation 2022-2023'
+            // this.format = ['Photos', 'Videos']
+            // this.dateStart = '2023-03-22T17:00'
+            // this.dateEnd = '2023-03-22T17:00'
+            // this.location = 'Salvador Campus'
+            // this.requestor = 'Nico Amarilla'
+            // this.department = 'MIS'
+            // this.email = 'nico.amarilla@example.com'
+            // this.fb = 'Nico Amarilla'
+        },
+        methods: {
+            matchEnd: function() {
+                if(!this.dateEnd){
+                    this.dateEnd = this.dateStart
+                }
+            },
+            onSubmit: function () {
+                try {
+                    const me = this;
+                    if (moment(this.dateEnd).isBefore(this.dateStart)) {
+                        me.errors['date'] = true
+                        throw new Error('Invalid dates. Please check your start and end date.')
+                    }
+                    if (me.format.length <= 0) {
+                        me.errors['format'] = true
+                        throw new Error('Please choose format.')
+                    }
+                    me.pending = true;
+                    me.$nextTick(function () {
+                        me.$refs.form.submit();
+                    });
+                } catch (err) {
+                    alert(err)
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

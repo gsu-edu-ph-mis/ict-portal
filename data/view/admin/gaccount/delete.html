@@ -1,0 +1,18 @@
+{% extends "document.html" %}
+
+{% block body %}
+
+<div class="col-md-4 col-5 ml-auto mr-auto pt-5 login-height">
+    <div class="login-form text-center">
+        <h1 class="text-center text-danger h4 mb-4">Confirm Delete</h1>
+        <form action="" method="POST">
+            <input type="hidden" name="acsrf" value="{{acsrf}}">
+            <div>
+                <div class="alert alert-danger">Do you want to delete GSU Account Request # {{gaccount.uid}}</div>
+            </div>
+            <a href="/admin/gaccount/all" class="btn btn-primary">No</a>
+            <button class="btn btn-danger">Yes, Delete</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
