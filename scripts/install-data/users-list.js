@@ -17,33 +17,10 @@ module.exports = [
         "firstName" : "Nico",
         "middleName" : "Gayapa",
         "lastName" : "Amarilla",
-        "email" : "nico+mis@gsu.edu.ph",
-        "username" : "gsu.mis.amarilla",
+        "email" : "nico+ict@gsu.edu.ph",
+        "username" : "gsu.ict.amarilla",
         "active" : true,
         permissions: [],
     },
-    {
-        "roles" : [
-            "admin"
-        ],
-        "firstName" : "Mark Laurence",
-        "middleName" : "Gallenero",
-        "lastName" : "Faigones",
-        "email" : "marklaurence.faigones@gsc.edu.ph",
-        "username" : "gsu.mis.faigones",
-        "active" : true,
-        permissions: [],
-    },
-    {
-        "roles" : [
-            "admin"
-        ],
-        "firstName" : "Keisha Dawn",
-        "middleName" : "Porras",
-        "lastName" : "Gadian",
-        "email" : "keishadawn.gadian@gsc.edu.ph",
-        "username" : "gsu.mis.keisha",
-        "active" : true,
-        permissions: [],
-    },
+   
 ]

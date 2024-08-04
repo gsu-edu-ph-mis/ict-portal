@@ -7,7 +7,7 @@
 # start-on-boot: sudo systemctl enable ict-portal
 
 [Unit]
-Description=Q
+Description=ICT-Portal
 
 [Service]
 ExecStart=/home/ubuntu/.nvm/versions/node/v20.14.0/bin/node /home/ubuntu/ict-portal/index.js
