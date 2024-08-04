@@ -1,19 +1,11 @@
 {
   "app": {
-    "url": "https://mis.gsu.edu.ph"
+    "url": "https://ict.gsu.edu.ph"
   },
   "nunjucks": {
     "loader": {
       "watch": false,
       "noCache": false
-    }
-  },
-  "aws": {
-    "region": "ap-southeast-1",
-    "bucket1": {
-      "name": "mis-gsu-ph",
-      "url": "https://mis-gsu-ph.s3-ap-southeast-1.amazonaws.com/files-live/",
-      "prefix": "files-live"
     }
   },
   "loginDelay": 5000
