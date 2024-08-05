@@ -72,11 +72,31 @@ router.post('/services/gsu-account', async (req, res, next) => {
         await gaccount.save()
 
         // console.log(gaccount)
-        res.redirect(`/services/gsu-account/thanks`)
+        res.redirect(`/services/gsu-account/transaction/${gaccount.uid}`)
     } catch (err) {
         next(err);
     }
 });
+
+router.get('/services/gsu-account/transaction/:gaccountUid', async (req, res, next) => {
+    try {
+        let gaccount = await req.app.locals.db.models.Gaccount.findOne({
+            where: {
+                uid: req.params.gaccountUid
+            }
+        })
+        if(!gaccount){
+            throw new Error(`Transaction not found.`)
+        }
+        let data = {
+            gaccount: gaccount
+        }
+        res.render('services/gsu-account/transaction.html', data);
+    } catch (err) {
+        next(err);
+    }
+});
+
 router.get('/services/gsu-account/thanks', async (req, res, next) => {
     try {
         let data = {}

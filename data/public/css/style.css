@@ -530,9 +530,9 @@ div.help {
     }
 
     /* Hide on small screens */
-    /* .grecaptcha-badge {
+    .grecaptcha-badge {
         visibility: hidden;
-    } */
+    }
 }
 
 /* ≥576px	Small */

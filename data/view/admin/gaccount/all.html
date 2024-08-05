@@ -36,14 +36,14 @@
                     </tr>
                     {% for row in rows %}
                         <tr>
-                            <td class="small d-none d-md-table-cell">{{row.uid}}</td>
+                            <td class="small">{{row.uid}}</td>
                             <td class="small d-none d-md-table-cell">{{row.createdAt|format_date('MMM DD, YYYY hh:mm A')}}</td>
-                            <td class="small">{{row.accountType}}</td>
+                            <td class="small d-none d-md-table-cell">{{row.accountType}}</td>
                             <td>{{row.firstName}}</td>
                             <td>{{row.middleName}}</td>
                             <td>{{row.lastName}}</td>
-                            <td>{{row.email}}</td>
-                            <td>{{row.mobileNumber}}</td>
+                            <td class="small d-none d-md-table-cell">{{row.email}}</td>
+                            <td class="small d-none d-md-table-cell">{{row.mobileNumber}}</td>
                             <td class="text-right">
                                 <a href="https://icto.gsu.edu.ph/services/gw_form.php?accountType={{row.accountType}}&idNumber={{row.idNumber}}&firstName={{row.firstName}}&middleName={{row.middleName}}&lastName={{row.lastName}}&email={{row.email}}&mobileNumber={{row.mobileNumber}}" target="_blank">Process</a> | <a class="text-danger font-weight-bold" href="/admin/gaccount/delete/{{row.id}}">✗</a>
                             </td>
