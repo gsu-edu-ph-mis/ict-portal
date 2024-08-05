@@ -150,6 +150,17 @@
                     if (!me.email) {
                         me.errors['email'] = true
                         throw new Error('Please specify the Alternative Email.')
+                    } else {
+                        if (/^[\w-\.+]+@([\w-]+\.)+[\w-]{2,4}$/g.test(me.email) === false) {
+                            me.errors['email'] = true
+                            throw new Error('Invalid email.')
+                        } else {
+                            let domain = me.email.split('@').at(-1)
+                            if (['gsu.edu.ph'].includes(domain)) {
+                                me.errors['email'] = true
+                                throw new Error('Please use your personal Gmail not your GSU email.')
+                            }
+                        }
                     }
                     if (!me.mobileNumber) {
                         me.errors['mobileNumber'] = true
