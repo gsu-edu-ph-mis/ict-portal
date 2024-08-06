@@ -155,7 +155,7 @@
                             me.errors['email'] = true
                             throw new Error('Invalid email.')
                         } else {
-                            let domain = me.email.split('@').at(-1)
+                            let domain = me.email?.split('@')?.at(-1)
                             if (['gsu.edu.ph'].includes(domain)) {
                                 me.errors['email'] = true
                                 throw new Error('Please use your personal Gmail not your GSU email.')
