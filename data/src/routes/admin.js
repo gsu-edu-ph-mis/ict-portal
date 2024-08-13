@@ -12,9 +12,9 @@ const sharp = require('sharp')
 //// Core modules
 
 //// Modules
-const mailer = require('../mailer');
-const middlewares = require('../middlewares');
-const S3_CLIENT = require('../aws-s3-client')  // V3 SDK
+const passwordMan = require('../password-man')
+const middlewares = require('../middlewares')
+const googleAdmin = require('../google-admin')
 
 // Router
 let router = express.Router()
@@ -34,7 +34,7 @@ router.get('/admin/gaccount/all', async (req, res, next) => {
         let s = req.query?.s
         let where = {}
         if (s) {
-            if(!isNaN(s)){
+            if (!isNaN(s)) {
                 where = {
                     uid: s
                 }
@@ -46,9 +46,13 @@ router.get('/admin/gaccount/all', async (req, res, next) => {
                 }
             }
         }
-        console.log(where)
+        // console.log(where)
         let gaccounts = await req.app.locals.db.models.Gaccount.findAll({
-            where: where
+            where: where,
+            order: [
+                ['status', 'ASC'],
+                ['createdAt', 'ASC'],
+            ]
         })
         let data = {
             rows: gaccounts,
@@ -78,6 +82,58 @@ router.post('/admin/gaccount/delete/:gaccountId', middlewares.getGaccount({ raw:
         await gaccount.destroy()
         flash.ok(req, 'gaccount', `GSU account request deleted.`)
         res.redirect('/admin/gaccount/all')
+    } catch (err) {
+        next(err);
+    }
+});
+
+// process
+router.get('/admin/gaccount/process/:gaccountId', middlewares.getGaccount(), async (req, res, next) => {
+    try {
+        let gaccount = res.gaccount
+        gaccount.gsumail = `${gaccount.firstName.toLowerCase()}.${gaccount.lastName.toLowerCase()}@gsu.edu.ph`.replace('ñ', 'n')
+        gaccount.password = passwordMan.genPassphrase(4)
+
+        if (ENV !== 'dev') {
+            let userPresence = await googleAdmin.checkUser(gaccount.gsumail)
+            if (userPresence) {
+                flash.error(req, 'gaccount', `${gaccount.gsumail} is already taken. Please use a different GSU Email Address.`)
+            }
+        }
+        let data = {
+            flash: flash.get(req, 'gaccount'),
+            gaccount: gaccount
+        }
+        // return res.send(data)
+        res.render('admin/gaccount/process.html', data);
+    } catch (err) {
+        next(err);
+    }
+});
+router.post('/admin/gaccount/process/:gaccountId', middlewares.getGaccount({ raw: false }), async (req, res, next) => {
+    try {
+        let gaccount = res.gaccount
+        let body = req.body
+
+        const user = {
+            primaryEmail: body.gsumail,
+            name: {
+                givenName: body.firstName,
+                familyName: body.lastName,
+            },
+            password: body.password, // Ensure the password meets Google Workspace requirements
+            changePasswordAtNextLogin: false,
+            orgUnitPath: '/Student'
+        };
+        if (ENV !== 'dev') {
+            await googleAdmin.createUser(user)
+        }
+        gaccount.gsumail = body.gsumail
+        gaccount.status = 1
+        await gaccount.save()
+
+        flash.ok(req, 'gaccount', `GSU account created.`)
+        res.redirect(`/admin/gaccount/process/${gaccount.id}`)
     } catch (err) {
         next(err);
     }

@@ -21,11 +21,17 @@ module.exports = (modelName, sequelize) => {
         lastName: {
             type: DataTypes.STRING,
         },
+        mobileNumber: {
+            type: DataTypes.STRING,
+        },
         email: {
             type: DataTypes.STRING,
         },
-        mobileNumber: {
+        gsumail: {
             type: DataTypes.STRING,
+        },
+        status: {
+            type: DataTypes.INTEGER,
         },
     }, {
         // Other model options go here

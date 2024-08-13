@@ -306,7 +306,7 @@ module.exports = {
                     },
                     ...options
                 })
-                if(!gaccount) throw new Error('GSU Aaccount not found')
+                if(!gaccount) throw new Error('GSU Account not found')
                 res.gaccount = gaccount
                 next();
             } catch (error) {
