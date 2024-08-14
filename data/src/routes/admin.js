@@ -116,6 +116,15 @@ router.post('/admin/gaccount/process/:gaccountId', middlewares.getGaccount({ raw
         let gaccount = res.gaccount
         let body = req.body
 
+        let orgUnitPath = '/Student'
+        if (body.accountType == 'Faculty') {
+            orgUnitPath = '/Employee';
+        } else if (body.accountType == 'Staff') {
+            orgUnitPath = '/Employee';
+        } else if (body.accountType == 'Office') {
+            orgUnitPath = '/Offices';
+        }
+
         const user = {
             primaryEmail: body.gsumail,
             name: {
@@ -124,7 +133,7 @@ router.post('/admin/gaccount/process/:gaccountId', middlewares.getGaccount({ raw
             },
             password: body.password, // Ensure the password meets Google Workspace requirements
             changePasswordAtNextLogin: false,
-            orgUnitPath: '/Student'
+            orgUnitPath: orgUnitPath
         };
         if (ENV !== 'dev') {
             await googleAdmin.createUser(user)
