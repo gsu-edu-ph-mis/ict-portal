@@ -102,7 +102,8 @@ router.get('/admin/gaccount/process/:gaccountId', middlewares.getGaccount(), asy
         }
         let data = {
             flash: flash.get(req, 'gaccount'),
-            gaccount: gaccount
+            gaccount: gaccount,
+            password: req.query?.password
         }
         // return res.send(data)
         res.render('admin/gaccount/process.html', data);
@@ -138,7 +139,7 @@ router.post('/admin/gaccount/process/:gaccountId', middlewares.getGaccount({ raw
         await gaccount.save()
 
         flash.ok(req, 'gaccount', `GSU account created.`)
-        res.redirect(`/admin/gaccount/process/${gaccount.id}`)
+        res.redirect(`/admin/gaccount/process/${gaccount.id}?password=${body.password}`)
     } catch (err) {
         next(err);
     }

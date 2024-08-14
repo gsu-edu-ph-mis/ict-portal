@@ -24,12 +24,17 @@
             </div>
 
             {%- if gaccount.status === 1 %}
+            <div class="alert alert-success">Please take a photo of your login.</div>
             <table class="table table-sm">
                 <tr>
-                    <td>GSU Email</td>
+                    <td>GSU Account Email</td>
                     <td>
                         <div class="text-success font-weight-bold">{{gaccount.gsumail}}</div>
                     </td>
+                </tr>
+                <tr>
+                    <td>Password</td>
+                    <td><div class="text-success font-weight-bold">${password}</div></td>
                 </tr>
                 <tr>
                     <td>Account Type</td>
@@ -47,14 +52,6 @@
                 <tr>
                     <td>Created</td>
                     <td>{{gaccount.createdAt|format_date('MMM DD YYYY hh:mm:ss A')}}</td>
-                </tr>
-                <tr>
-                    <td>Alternative Email</td>
-                    <td>${email}</td>
-                </tr>
-                <tr>
-                    <td>Mobile Number</td>
-                    <td>${mobileNumber}</td>
                 </tr>
             </table>
 
@@ -104,18 +101,7 @@
                     <input v-model="lastName" name="lastName" id="lastName" type="text" class="form-control">
                 </div>
                 <hr>
-                <h6 class="h6 mb-3">
-                    <span class="mr-2">Contact Information</span>
-                </h6>
-                <div class="form-group" v-bind:data-error="errors['email']" v-on:click="errors.email=false">
-                    <label for="email" class="mr-1">Alternative Email Address</label>
-                    <input v-model="email" name="email" id="email" type="email" class="form-control">
-                </div>
-                <div class="form-group" v-bind:data-error="errors['mobileNumber']" v-on:click="errors.mobileNumber=false">
-                    <label for="mobileNumber" class="mr-1">Mobile Number</label>
-                    <input v-model="mobileNumber" name="mobileNumber" id="mobileNumber" type="mobileNumber" class="form-control">
-                </div>
-                <hr>
+             
                 <h6 class="h6 mb-3">
                     <span class="mr-2">GSU Account</span>
                 </h6>
@@ -168,6 +154,7 @@
             middleName: '{{gaccount.middleName}}',
             noMiddle: {% if gaccount.middleName %}false{% else %}true{% endif %},
             lastName: '{{gaccount.lastName}}',
+            password: '{{password}}',
 
             email: '{{gaccount.email}}',
             mobileNumber: '{{gaccount.mobileNumber}}',
@@ -213,25 +200,7 @@
                         me.errors['lastName'] = true
                         throw new Error('Please specify the Last Name.')
                     }
-                    if (!me.email) {
-                        me.errors['email'] = true
-                        throw new Error('Please specify the Alternative Email.')
-                    } else {
-                        if (/^[\w-\.+]+@([\w-]+\.)+[\w-]{2,4}$/g.test(me.email) === false) {
-                            me.errors['email'] = true
-                            throw new Error('Invalid email.')
-                        } else {
-                            let domain = me.email?.split('@')?.at(-1)
-                            if (['gsu.edu.ph'].includes(domain)) {
-                                me.errors['email'] = true
-                                throw new Error('Please use your personal Gmail not your GSU email.')
-                            }
-                        }
-                    }
-                    if (!me.mobileNumber) {
-                        me.errors['mobileNumber'] = true
-                        throw new Error('Please specify the Mobile Number.')
-                    }
+                   
                     if (!me.gsumail) {
                         me.errors['gsumail'] = true
                         throw new Error('Please specify the GSU Email.')
