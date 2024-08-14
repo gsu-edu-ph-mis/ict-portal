@@ -91,7 +91,7 @@ router.post('/admin/gaccount/delete/:gaccountId', middlewares.getGaccount({ raw:
 router.get('/admin/gaccount/process/:gaccountId', middlewares.getGaccount(), async (req, res, next) => {
     try {
         let gaccount = res.gaccount
-        gaccount.gsumail = `${gaccount.firstName.toLowerCase()}.${gaccount.lastName.toLowerCase()}@gsu.edu.ph`.replace('ñ', 'n')
+        gaccount.gsumail = `${gaccount.firstName.toLowerCase()}.${gaccount.lastName.toLowerCase()}@gsu.edu.ph`.replace('ñ', 'n').replace(' ', '')
         gaccount.password = passwordMan.genPassphrase(4)
 
         if (ENV !== 'dev') {
