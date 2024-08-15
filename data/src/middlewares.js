@@ -204,6 +204,7 @@ module.exports = {
             title: CONFIG.app.title,
             description: CONFIG.description,
         }
+        req.app.locals.ENV = ENV
         req.app.locals.CONFIG = lodash.cloneDeep(CONFIG) // Config
         next()
     },

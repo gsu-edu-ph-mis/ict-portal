@@ -32,11 +32,10 @@ router.get('/admin/all', async (req, res, next) => {
 router.get('/admin/gaccount/all', async (req, res, next) => {
     try {
         let momentDate = (req.query?.date) ? moment(req.query?.date) : moment()
-        let s = req.query?.s
+        let s = (req.query?.s) ? `${req.query?.s}`.trim() : ''
         let where = {}
         if (s) {
-            console.log(s.slice(0,2))
-            if (s.slice(0,2) === 'id') {
+            if (s.slice(0, 2) === 'id') {
                 where = lodash.set(where, 'idNumber', s.slice(2))
             } else {
                 // where = {
