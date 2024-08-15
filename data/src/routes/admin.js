@@ -31,20 +31,31 @@ router.get('/admin/all', async (req, res, next) => {
 //// Google/GSU Account
 router.get('/admin/gaccount/all', async (req, res, next) => {
     try {
+        let momentDate = (req.query?.date) ? moment(req.query?.date) : moment()
         let s = req.query?.s
         let where = {}
         if (s) {
-            if (!isNaN(s)) {
-                where = {
-                    uid: s
-                }
+            console.log(s.slice(0,2))
+            if (s.slice(0,2) === 'id') {
+                where = lodash.set(where, 'idNumber', s.slice(2))
             } else {
-                where = {
-                    lastName: {
-                        [Sequelize.Op.like]: `%${s}%`
-                    }
-                }
+                // where = {
+                //     lastName: ,
+                //     createdAt: {
+                //         [Sequelize.Op.gte]: momentDate.clone().startOf('day').toDate(),
+                //         [Sequelize.Op.lte]: momentDate.clone().endOf('day').toDate(),
+                //     }
+                // }
+                where = lodash.set(where, 'lastName', {
+                    [Sequelize.Op.like]: `%${s}%`
+                })
             }
+        }
+        if (req.query.date !== '-1') {
+            where = lodash.set(where, 'createdAt', {
+                [Sequelize.Op.gte]: momentDate.clone().startOf('day').toDate(),
+                [Sequelize.Op.lte]: momentDate.clone().endOf('day').toDate(),
+            })
         }
         // console.log(where)
         let gaccounts = await req.app.locals.db.models.Gaccount.findAll({
@@ -55,7 +66,12 @@ router.get('/admin/gaccount/all', async (req, res, next) => {
             ]
         })
         let data = {
+            momentDate: momentDate,
+            prevDate: momentDate.clone().subtract(1, 'day'),
+            nextDate: momentDate.clone().add(1, 'day'),
             rows: gaccounts,
+            processedCount: gaccounts.filter(i => i.status === 1).length,
+            unprocessedCount: gaccounts.filter(i => i.status !== 1).length,
             s: s,
             flash: flash.get(req, 'survey')
         }
@@ -64,6 +80,8 @@ router.get('/admin/gaccount/all', async (req, res, next) => {
         next(err);
     }
 });
+
+
 // Delete
 router.get('/admin/gaccount/delete/:gaccountId', middlewares.getGaccount(), async (req, res, next) => {
     try {

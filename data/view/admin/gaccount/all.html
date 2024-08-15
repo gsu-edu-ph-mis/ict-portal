@@ -17,26 +17,36 @@
                 </div>
                 <div class="col-md-6">
                     <form action="/admin/gaccount/all">
-                        <input value="{{s}}" type="search" placeholder="Search" name="s" class="form-control">
+                        <input value="{{s}}" type="search" placeholder="Type last name or id number eg. id2024-1-1234" name="s" class="form-control">
                     </form>
                 </div>
             </div>
-            <div class="table-responsive mb-0">
-                <table class="table table-sm table-striped mb-0">
-                    <tr>
-                        <th width="2%">#</th>
-                        <th width="10%">ID No.</th>
-                        <th width="20%" class="d-none d-md-table-cell">Created</th>
-                        <th width="10%" class="d-none d-md-table-cell">Type</th>
-                        <th>Last Name</th>
-                        <th>First Name</th>
-                        <th>Middle Name</th>
-                        <th width="20%"></th>
-                    </tr>
-                    {% for row in rows %}
+            <div class="d-flex align-items-center justify-content-center m-3">
+                <a href="?date={{prevDate|format_date('YYYY-MM-DD')}}" class="btn btn-sm btn-light">&laquo;</a>
+                <span class="ml-3 mr-3">{{momentDate|format_date('MMM DD, YYYY')}}</span>
+                <a href="?date={{nextDate|format_date('YYYY-MM-DD')}}" class="btn btn-sm btn-light">&raquo;</a>
+                
+            </div>
+            {%- if rows.length <= 0 %}
+                <div class="alert alert-info">No applications. </div>
+            {% else %}
+                <p>Showing <strong>{{rows.length}}</strong> applications. <strong class="text-success">{{processedCount}}</strong> processed. <strong class="text-danger">{{unprocessedCount}}</strong> unprocessed.</p>
+                <div class="table-responsive mb-0">
+                    <table class="table table-sm table-striped mb-0">
+                        <tr>
+                            <th width="2%">#</th>
+                            <th width="10%">ID No.</th>
+                            <th width="20%" class="d-none d-md-table-cell">Created</th>
+                            <th width="10%" class="d-none d-md-table-cell">Type</th>
+                            <th>Last Name</th>
+                            <th>First Name</th>
+                            <th>Middle Name</th>
+                            <th width="20%"></th>
+                        </tr>
+                        {% for row in rows %}
                         <tr>
                             <td class="">{{loop.index}}</td>
-                            <td class="">{{row.idNumber}}</td>
+                            <td class=""><a href="?s=id{{row.idNumber}}">{{row.idNumber}}</a></td>
                             <td class="font-italic d-none d-md-table-cell">{{row.createdAt|format_date('MMM DD, YYYY hh:mm A')}}</td>
                             <td class=" d-none d-md-table-cell">{{row.accountType}}</td>
                             <td class="">{{row.lastName}}</td>
@@ -56,9 +66,10 @@
                                 <!-- <a href="https://icto.gsu.edu.ph/services/gw_form.php?accountType={{row.accountType}}&idNumber={{row.idNumber}}&firstName={{row.firstName}}&middleName={{row.middleName}}&lastName={{row.lastName}}&email={{row.email}}&mobileNumber={{row.mobileNumber}}" target="_blank">Process</a> | <a class="text-danger font-weight-bold" href="/admin/gaccount/delete/{{row.id}}">✗</a> -->
                             </td>
                         </tr>
-                    {% endfor %}
-                </table>
-            </div>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif -%}
         </div>
     </div>
 </div>
