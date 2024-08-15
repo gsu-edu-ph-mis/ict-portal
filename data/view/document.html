@@ -32,12 +32,11 @@
 <script src="{{app.url}}/js/lodash.min.js"></script>
 <script src="{{app.url}}/js/moment.min.js"></script>
 <script src="{{app.url}}/js/moment-timezone-with-data-10-year-range.min.js"></script>
-<!--<script src="{{app.url}}/js/axios.min.js"></script>-->
 {%- if ENV === 'dev' %}
+    <script src="{{app.url}}/js/vue.js"></script>
+{% else %}
     <script src="{{app.url}}/js/vue.min.js"></script>
 {% endif -%}
-<!-- <script src="{{app.url}}/js/vuejs-auto-complete.js"></script> -->
-<!--<script src="{{app.url}}/js/zxcvbn.js"></script>-->
 <script src="{{app.url}}/js/script-cookies.js"></script>
 <script src="{{app.url}}/js/script.js"></script>
 {% endblock %}
