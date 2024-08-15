@@ -59,6 +59,28 @@ router.post('/services/gsu-account', async (req, res, next) => {
 
 
         }
+        data.idNumber = `${data.idNumber}`.trim()
+        data.firstName = `${data.firstName}`.trim()
+        data.middleName = `${data.middleName}`.trim()
+        data.lastName = `${data.lastName}`.trim()
+
+        let found = await req.app.locals.db.models.Gaccount.findOne({
+            where: {
+                firstName: {
+                    [Sequelize.Op.like]: `${data.firstName}`
+                },
+                middleName: {
+                    [Sequelize.Op.like]: `${data.middleName}`
+                },
+                lastName: {
+                    [Sequelize.Op.like]: `${data.lastName}`
+                }
+            }
+        })
+        if(found){
+            throw new Error(`You have already applied. Please visit the ICTU.`)
+        }
+
         let gaccount = req.app.locals.db.models.Gaccount.build({
             uid: `${passwordMan.genPasscode(4)}`,
             accountType: data.accountType,
