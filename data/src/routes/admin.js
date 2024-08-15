@@ -91,8 +91,10 @@ router.post('/admin/gaccount/delete/:gaccountId', middlewares.getGaccount({ raw:
 router.get('/admin/gaccount/process/:gaccountId', middlewares.getGaccount(), async (req, res, next) => {
     try {
         let gaccount = res.gaccount
-        gaccount.gsumail = `${gaccount.firstName.toLowerCase()}.${gaccount.lastName.toLowerCase()}@gsu.edu.ph`.replace('ñ', 'n').replace(/ /g, '') // remove spaces ñ
-        gaccount.password = passwordMan.genPassphrase(4)
+        if (gaccount.status !== 1) {
+            gaccount.gsumail = `${gaccount.firstName.toLowerCase()}.${gaccount.lastName.toLowerCase()}@gsu.edu.ph`.replace('ñ', 'n').replace(/ /g, '') // remove spaces ñ
+            gaccount.password = passwordMan.genPassphrase(4)
+        }
 
         if (ENV !== 'dev') {
             let userPresence = await googleAdmin.checkUser(gaccount.gsumail)
