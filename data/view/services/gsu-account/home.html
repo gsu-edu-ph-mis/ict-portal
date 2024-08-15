@@ -119,9 +119,16 @@
             
         },
         methods: {
-            capitalize: function(name){
-                let value = this[name]
-                value = value.split(' ').map(v => _.capitalize(v)).join(' ')
+            capitalize: function (name) {
+                let value = `${this[name]}`
+                value = value.split(' ').map(v => {
+                    v = (v) ? `${v}`.trim() : ''
+                    if (v.length > 2) {
+                        v = _.capitalize(v)
+                    }
+
+                    return v
+                }).join(' ')
                 this[name] = value
             },
             onSubmit: function () {
