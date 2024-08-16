@@ -22,9 +22,7 @@ let router = express.Router()
 
 
 // REQUIRE AUTH
-router.use('/services', middlewares.requireAuthUser)
-
-router.get('/services/survey', async (req, res, next) => {
+router.get('/services/survey', middlewares.requireAuthUser, async (req, res, next) => {
     try {
         let data = {
             dateStart: moment().format('YYYY-MM-DD')
