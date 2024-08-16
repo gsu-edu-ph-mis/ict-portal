@@ -49,12 +49,13 @@ router.get('/admin/gaccount/all', async (req, res, next) => {
                     [Sequelize.Op.like]: `%${s}%`
                 })
             }
-        }
-        if (req.query.date !== '-1') {
-            where = lodash.set(where, 'createdAt', {
-                [Sequelize.Op.gte]: momentDate.clone().startOf('day').toDate(),
-                [Sequelize.Op.lte]: momentDate.clone().endOf('day').toDate(),
-            })
+        } else {
+            if (req.query.date !== '-1') {
+                where = lodash.set(where, 'createdAt', {
+                    [Sequelize.Op.gte]: momentDate.clone().startOf('day').toDate(),
+                    [Sequelize.Op.lte]: momentDate.clone().endOf('day').toDate(),
+                })
+            }
         }
         // console.log(where)
         let gaccounts = await req.app.locals.db.models.Gaccount.findAll({
