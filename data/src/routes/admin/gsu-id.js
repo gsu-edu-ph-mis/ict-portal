@@ -109,5 +109,18 @@ router.get('/admin/gsuid/process/:gsuidId', middlewares.getGsuid({ raw: false })
         next(err);
     }
 });
+router.get('/admin/gsuid/unprocess/:gsuidId', middlewares.getGsuid({ raw: false }), async (req, res, next) => {
+    try {
+        let gsuid = res.gsuid
+       
+        gsuid.status = 0
+        await gsuid.save()
+
+        flash.ok(req, 'gsuid', `GSU ID app. status updated.`)
+        res.redirect(`/admin/gsuid/all`)
+    } catch (err) {
+        next(err);
+    }
+});
 
 module.exports = router;
