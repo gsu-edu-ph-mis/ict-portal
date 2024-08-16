@@ -7,6 +7,7 @@ const lodash = require('lodash')
 const moment = require('moment')
 const flash = require('kisapmata')
 const { Sequelize } = require('sequelize')
+const { PhAddress } = require('ph-address')
 
 //// Core modules
 
@@ -19,114 +20,6 @@ const S3_CLIENT = require('../aws-s3-client')  // V3 SDK
 // Router
 let router = express.Router()
 
-
-router.get('/services/gsu-account', async (req, res, next) => {
-    try {
-        let data = {}
-        res.render('services/gsu-account/home.html', data);
-    } catch (err) {
-        next(err);
-    }
-});
-router.post('/services/gsu-account', async (req, res, next) => {
-    try {
-        let data = req.body
-
-        // Recaptcha
-        let recaptchaToken = data.recaptchaToken
-        if (CONFIG.recaptchav3.enable) {
-
-            let params = new url.URLSearchParams({
-                secret: CRED.recaptchav3.secret,
-                response: recaptchaToken
-            });
-
-            let response = await fetch(`https://www.google.com/recaptcha/api/siteverify?${params.toString()}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': "application/x-www-form-urlencoded"
-                }
-            })
-            if (!response.ok) {
-                throw new Error(await response.text())
-            }
-            response = await response.json()
-            console.log(response)
-            let score = lodash.get(response, 'score', 0.0)
-            if (score < 0.5) {
-                throw new Error(`Security error.`)
-            }
-
-
-        }
-        data.idNumber = `${data.idNumber}`.trim()
-        data.firstName = `${data.firstName}`.trim()
-        data.middleName = `${data.middleName}`.trim()
-        data.lastName = `${data.lastName}`.trim()
-
-        let found = await req.app.locals.db.models.Gaccount.findOne({
-            where: {
-                firstName: {
-                    [Sequelize.Op.like]: `${data.firstName}`
-                },
-                middleName: {
-                    [Sequelize.Op.like]: `${data.middleName}`
-                },
-                lastName: {
-                    [Sequelize.Op.like]: `${data.lastName}`
-                }
-            }
-        })
-        if(found){
-            throw new Error(`You have already applied. Please visit the ICTU.`)
-        }
-
-        let gaccount = req.app.locals.db.models.Gaccount.build({
-            uid: `${passwordMan.genPasscode(4)}`,
-            accountType: data.accountType,
-            idNumber:  data.idNumber,
-            firstName:  data.firstName,
-            middleName:  data.middleName,
-            lastName:  data.lastName,
-            email:  data.email,
-            mobileNumber:  data.mobileNumber,
-        })
-        await gaccount.save()
-
-        // console.log(gaccount)
-        res.redirect(`/services/gsu-account/transaction/${gaccount.uid}`)
-    } catch (err) {
-        next(err);
-    }
-});
-
-router.get('/services/gsu-account/transaction/:gaccountUid', async (req, res, next) => {
-    try {
-        let gaccount = await req.app.locals.db.models.Gaccount.findOne({
-            where: {
-                uid: req.params.gaccountUid
-            }
-        })
-        if(!gaccount){
-            throw new Error(`Transaction not found.`)
-        }
-        let data = {
-            gaccount: gaccount
-        }
-        res.render('services/gsu-account/transaction.html', data);
-    } catch (err) {
-        next(err);
-    }
-});
-
-router.get('/services/gsu-account/thanks', async (req, res, next) => {
-    try {
-        let data = {}
-        res.render('services/gsu-account/thanks.html', data);
-    } catch (err) {
-        next(err);
-    }
-});
 
 // REQUIRE AUTH
 router.use('/services', middlewares.requireAuthUser)
@@ -174,6 +67,45 @@ router.get('/services/thanks', async (req, res, next) => {
     try {
         let data = {}
         res.render('services/thanks.html', data);
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/courses', middlewares.requireAuthUser, async (req, res, next) => {
+    try {
+        let search = lodash.get(req, 'query.s', '');
+        search = new RegExp(search, 'i')
+
+        let courses = req.app.locals.COURSES.filter(course => search.test(course.id) || search.test(course.name))
+        return res.send(courses)
+
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/address', middlewares.requireAuthUser, async (req, res, next) => {
+    try {
+        let search = lodash.get(req, 'query.s', '');
+        const phAddress = new PhAddress()
+        const addressFinder = await phAddress.useSqlite()
+        const formatter = (a) => {
+            let full = []
+            if (a.name) full.push(a.name)
+            if (a.cityMunName) full.push(a.cityMunName)
+            if (a.provName && (a.provName !== a.cityMunName)) full.push(a.provName)
+            // if (a.regName) full.push(a.regName)
+
+            return {
+                name: full.join(', '),
+                id: a.psgc
+            }
+        }
+        let addresses = await addressFinder.find(search, 2, 5, formatter)
+        let addresses2 = await addressFinder.find(search.replace('sta.', 'Santa'), 2, 5, formatter)
+        let a2 = [...addresses, ...addresses2]
+        return res.send(a2)
     } catch (err) {
         next(err);
     }

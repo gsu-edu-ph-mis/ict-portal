@@ -1,0 +1,153 @@
+{% extends "document.html" %}
+{% block body %}
+<div class="row">
+    <div class="col-12">
+        <div id="vApp" v-cloak :data-pending="pending" class="login-form" style="margin-top: 58px">
+            {% include 'parts/flash.html' %}
+            <template v-if="tarp.status === 'Pending'">
+                <div class="alert alert-warning text-center h2">Tarp not yet printed.</div>
+                <div class="text-center">
+                    <a href="" class="btn btn-primary">Check Again</a>
+                </div>
+            </template>
+            <template v-if="tarp.status === 'Printed'">
+                <div class="alert alert-success text-center h2">Tarp printed. Please claim.</div>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                        <tr>
+                            <td colspan="2" class="text-center">
+                                <strong>Tarp Details</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="15%" class="text-right font-weight-bold">Purpose</td>
+                            <td>{{tarp.purpose}}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right font-weight-bold">Needed</td>
+                            <td>{{tarp.dateNeeded|format_date('MMM DD, YYYY')}}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right font-weight-bold">Dimensions</td>
+                            <td>
+                                <em>{{tarp.width}} {{tarp.widthUnit}} x {{tarp.height}} {{tarp.heightUnit}}</em>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </template>
+            <template v-if="tarp.status === 'Claimed'">
+                <div class="alert alert-info text-center h3">Please upload a photo of the tarpaulin posted on the wall<br> or in their respective locations.</div>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                        <tr>
+                            <td colspan="2" class="text-center">
+                                <strong>Tarp Details</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="15%" class="text-right font-weight-bold">Purpose</td>
+                            <td>{{tarp.purpose}}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right font-weight-bold">Needed</td>
+                            <td>{{tarp.dateNeeded|format_date('MMM DD, YYYY')}}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right font-weight-bold">Dimensions</td>
+                            <td>
+                                <em>{{tarp.width}} {{tarp.widthUnit}} x {{tarp.height}} {{tarp.heightUnit}}</em>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="p-3" style="border: 2px dotted red; border-radius: 5px;">
+                    <div class="d-flex flex-wrap">
+                        <div v-for="a in tarp.attachments" class="p-1 border m-1" style="position: relative;">
+                            <div>
+                                <a :href="`/file-viewer/mis-gsu-ph/files-dev/${a}`">
+                                    <img :src="`/file-getter/mis-gsu-ph/files-dev/small-${a}`" alt="attachment">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <form v-if="tarp.attachments?.length <= 2" ref="form" v-on:submit.prevent="onSubmit" action=""
+                        method="POST" class="">
+                        <div class="form-group">
+                            <div>
+                                <canvas id="canvas1" height="20" style="width: 100%; height: auto;"></canvas>
+                                <input name="attachment" v-model="attachment" type="hidden">
+                                <input v-on:change="readFile($event, 'attachment', 'canvas1')" ref="attachment"
+                                    type="file" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <button :disabled="disabled" class="btn btn-lg btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </template>
+            <template v-if="tarp.status === 'Done'">
+                <div class="alert alert-info text-center">Tarp already posted.</div>
+            </template>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="{{app.url}}/js/vue-file-upload.js"></script>
+<script>
+    var acsrf = '{{acsrf}}';
+    var tarp = {{ tarp| stringify | safe}}
+    var vApp = new Vue({
+        el: '#vApp',
+        delimiters: ["${", "}"],
+        mixins: [
+            VueFileUpload.mixin, // vue-file-upload.js
+        ],
+        data: {
+            pending: false,
+            tarp: tarp,
+            attachment: '',
+        },
+        computed: {
+            disabled: function () {
+                return this.attachment ? false : true
+            }
+        },
+        methods: {
+            onSubmit: function () {
+                var me = this;
+                if (me.attachment) {
+                    me.pending = true
+                    me.$nextTick(function () {
+                        fetch(`/admin/tarp/${me.tarp.id}/set-attachment`, {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                acsrf: acsrf,
+                                attachment: me.attachment
+                            }),
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        }).then(async function (response) {
+                            if (response.ok) {
+                                return response.json();
+                            }
+                            throw new Error(await response.text())
+                        }).then(function (responseJson) {
+                            window.location.reload(false);
+                        }).catch(async function (error) {
+                            console.error(error)
+                        }).then(function () {
+                            me.pending = false
+                        });
+                    });
+                }
+            },
+        }
+    })
+</script>
+{% endblock %}

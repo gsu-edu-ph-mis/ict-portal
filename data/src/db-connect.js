@@ -30,6 +30,7 @@ module.exports = {
                 User: require('./models/user')('User', sequelize),
                 Survey: require('./models/survey')('Survey', sequelize),
                 Gaccount: require('./models/gaccount')('Gaccount', sequelize),
+                Gsuid: require('./models/gsuid')('Gsuid', sequelize),
             }
         } catch (error) {
             console.log('Connection error:', error.message)

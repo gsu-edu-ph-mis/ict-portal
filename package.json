@@ -27,6 +27,7 @@
     "nodemailer": "^6.9.1",
     "nunjucks": "^3.2.3",
     "nunjucks-filters": "github:kosinix/nunjucks-filters",
+    "ph-address": "^3.0.3",
     "pigura": "^1.0.1",
     "qr-image": "^3.2.0",
     "sequelize": "^6.29.2",

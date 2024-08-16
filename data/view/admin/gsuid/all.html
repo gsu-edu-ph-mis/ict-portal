@@ -4,10 +4,10 @@
     <div class="col-12 pt-5">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active font-weight-bold" href="/admin/gaccount/all">GSU Account Requests</a>
+                <a class="nav-link" href="/admin/gaccount/all">GSU Account Requests</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/admin/gsuid/all">GSU ID</a>
+                <a class="nav-link active font-weight-bold" href="/admin/gsuid/all">GSU ID</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/admin/survey/all">Surveys</a>
@@ -19,7 +19,7 @@
                 <div class="col-md-6">
                 </div>
                 <div class="col-md-6">
-                    <form action="/admin/gaccount/all">
+                    <form action="/admin/gsuid/all">
                         <input value="{{s}}" type="search" placeholder="Type last name or id number eg. id2024-1-1234" name="s" class="form-control">
                     </form>
                 </div>
@@ -57,16 +57,16 @@
                             <td class="">{{row.middleName}}</td>
                             <td class="text-right d-flex align-items-center justify-content-end">
                                 {%- if row.status === 1 %}
-                                    <a href="/admin/gaccount/process/{{row.id}}" class="text-success text-decoration-none mr-3">
+                                    <a href="/admin/gsuid/process/{{row.id}}" class="text-success text-decoration-none mr-3">
                                         <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Done</title><path fill="currentColor" d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" /></svg>
                                     </a>
 
                                 {% else %}
-                                    <a href="/admin/gaccount/process/{{row.id}}" class="mr-3">Process</a>
+                                    <!-- <a href="/admin/gsuid/process/{{row.id}}" class="mr-3">Process</a> -->
+                                    <a href="http://180.193.222.75/ictu/request-form/ids-form?__svcIDValue=1&accountType={{row.accountType}}&idNumber={{row.idNumber}}&course={{row.course}}&firstName={{row.firstName}}&middleName={{row.middleName}}&lastName={{row.lastName}}&suffix={{row.suffix}}&gender={{row.gender|replace('M', 'male')|replace('F', 'female')}}&bloodType={{row.bloodType}}&birthDate={{row.birthDate}}&email={{row.email}}&mobileNumber={{row.mobileNumber}}&guardianName={{row.guardianName}}&guardianNumber={{row.guardianNumber}}&address={{row.address}}&campus=1" target="_blank" class="mr-3">Process</a> 
 
                                 {% endif -%}
-                                <a class="text-danger font-weight-bold text-decoration-none" href="/admin/gaccount/delete/{{row.id}}" title="Delete">✗</a>
-                                <!-- <a href="https://icto.gsu.edu.ph/services/gw_form.php?accountType={{row.accountType}}&idNumber={{row.idNumber}}&firstName={{row.firstName}}&middleName={{row.middleName}}&lastName={{row.lastName}}&email={{row.email}}&mobileNumber={{row.mobileNumber}}" target="_blank">Process</a> | <a class="text-danger font-weight-bold" href="/admin/gaccount/delete/{{row.id}}">✗</a> -->
+                                <a class="text-danger font-weight-bold text-decoration-none" href="/admin/gsuid/delete/{{row.id}}" title="Delete">✗</a>
                             </td>
                         </tr>
                         {% endfor %}

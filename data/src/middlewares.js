@@ -1,5 +1,6 @@
 
 //// Core modules
+const fs = require('fs')
 
 //// External modules
 const access = require('acrb')
@@ -206,6 +207,18 @@ module.exports = {
         }
         req.app.locals.ENV = ENV
         req.app.locals.CONFIG = lodash.cloneDeep(CONFIG) // Config
+
+        let courses = fs.readFileSync(`${CONFIG.app.dir}/scripts/install-data/courses.csv`, { encoding: 'utf8' })
+            courses = courses.split("\n")
+            courses = courses.map(e => {
+                e = e.split(',')
+                return {
+                    id: e.at(0),
+                    name: e.at(1)
+                }
+            })
+            req.app.locals.COURSES = courses
+
         next()
     },
     /**
@@ -309,6 +322,27 @@ module.exports = {
                 })
                 if(!gaccount) throw new Error('GSU Account not found')
                 res.gaccount = gaccount
+                next();
+            } catch (error) {
+                next(error);
+            }
+        }
+    },
+    getGsuid: (opts={}) => {
+        return async (req, res, next) => {
+            try {
+                let _opts = {
+                    raw: true
+                }
+                let options = {..._opts, ...opts}
+                let instance = await req.app.locals.db.models.Gsuid.findOne({
+                    where: {
+                        id: req.params?.gsuidId
+                    },
+                    ...options
+                })
+                if(!instance) throw new Error('GSU ID application not found')
+                res.gsuid = instance
                 next();
             } catch (error) {
                 next(error);

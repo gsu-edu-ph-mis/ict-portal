@@ -1,0 +1,416 @@
+{% extends "document.html" %}
+{% block body %}
+    <div class="row">
+        <div id="vApp" v-cloak v-bind:data-pending="pending" class="col-md-12 ml-auto mr-auto pt-3 pb-3 pt-md-5 pb-md-5" style="max-width:900px">
+            {% include 'parts/header.html' %}
+            <div class=" p-md-4 p-3 bg-glass" style="min-width: 300px;">
+                <h1 class="text-center h4">ID Service</h1>
+                <h2 class="text-center h6 mb-4">(GSU ID for Students)</h2>
+                <form ref="form" v-on:submit.prevent="onSubmit" action="" method="POST">
+                    <div class="form-group" v-bind:data-error="errors['accountType']" v-on:click="errors.accountType=false">
+                        <label for="accountType" class="mr-1">Account Type</label>
+                        <select v-model="accountType" name="accountType" id="accountType" class="form-control">
+                            <option value="Student">Student</option>
+                        </select>
+                        <p class="text-center"><em>For faculty and staff, please proceed to the ICTU office and apply at the service kiosk.</em></p>
+                    </div>
+                    <div class="form-group" v-bind:data-error="errors['idNumber']" v-on:click="errors.idNumber=false">
+                        <label for="idNumber" class="mr-1">ID Number</label>
+                        <input v-model="idNumber" name="idNumber" id="idNumber" type="text" class="form-control">
+                    </div>
+                    <div class="form-group" :data-error="errors.course" @click="errors.course=false">
+                        <label for="idNumber" class="mr-1">Course</label>
+                        <input v-model="course" name="course" type="hidden" class="form-control">
+                        <autocomplete
+                            initial-value=""
+                            :initial-display="course"
+                            placeholder="eg. Bachelor of Science in Information Technology..."
+                            :source="dataSourceCourse"
+                            input-class="form-control"
+                            :request-headers="headers"
+                            v-on:selected="onSelectCourse"
+                            v-on:clear="course='';course=''"
+                            >
+                        </autocomplete>
+                    </div>
+                    <h6 class="h6 mb-3">
+                        <span class="mr-2">Personal Information</span>
+                    </h6>
+                    <div class="form-row">
+                        <div class="col-6">
+                            <div class="form-group" v-bind:data-error="errors['firstName']" v-on:click="errors.firstName=false">
+                                <label for="firstName" class="mr-1">First Name</label>
+                                <input @blur="capitalize('firstName')" v-model="firstName" name="firstName" id="firstName" type="text" class="form-control">
+                            </div>
+                        </div>
+               
+                        <div class="col-6">
+                            <div class="form-group" v-bind:data-error="errors['middleName']" v-on:click="errors.middleName=false">
+                                <div class="form-row">
+                                    <div class="col-md-5">
+                                        <label for="middleName" class="mr-1">Middle Name</label>
+                                    </div>
+                                    <div class="col-md-7 mb-2">
+                                        <div class="custom-control custom-switch">
+                                            <input v-model="noMiddle" type="checkbox" class="custom-control-input" id="help">
+                                            <label class="custom-control-label" for="help">No Middle Name</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input @blur="capitalize('middleName')" v-model="middleName" name="middleName" id="middleName" type="text" class="form-control" :disabled="noMiddle">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-6">
+                            <div class="form-group" v-bind:data-error="errors['lastName']" v-on:click="errors.lastName=false">
+                                <label for="lastName" class="mr-1">Last Name</label>
+                                <input @blur="capitalize('lastName')" v-model="lastName" name="lastName" id="lastName" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group" :data-error="errors['suffix']" @click="errors.suffix=false">
+                                <label for="suffix">Suffix</label>
+                                <select v-model="suffix" name="suffix" id="suffix" class="form-control">
+                                    <option value=""></option>
+                                    <option>Jr.</option>
+                                    <option>Sr.</option>
+                                    <option>II</option>
+                                    <option>III</option>
+                                    <option>IV</option>
+                                    <option>V</option>
+                                    <option>VI</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-6">
+                            <div class="form-group" :data-error="errors.gender" @click="errors.gender=false">
+                                <label for="gender">Gender</label>
+                                <select v-model="gender" name="gender" id="gender" class="form-control">
+                                    <option value=""></option>
+                                    <option value="F">Female</option>
+                                    <option value="M">Male</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group" :data-error="errors['bloodType']" @click="errors.bloodType=false">
+                                <label for="bloodType">Blood Type</label>
+                                <select v-model="bloodType" name="bloodType" id="bloodType" class="form-control">
+                                    <option value="0">- Select -</option>
+                                    <option value="1">A Positive (A+)</option>
+                                    <option value="2">A Negative (A-)</option>
+                                    <option value="3">B Positive (B+)</option>
+                                    <option value="4">B Negative (B-)</option>
+                                    <option value="5">AB Positive (AB+)</option>
+                                    <option value="6">AB Negative (AB-)</option>
+                                    <option value="7">O Positive (O+)</option>
+                                    <option value="8">O Negative (O-)</option>
+                                    <option value="12">X (Unknown)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-12">
+                            <div class="form-group" :data-error="errors.birthDate" @click="errors.birthDate=false">
+                                <label for="birthDate">Birthdate <em>${age}</em></label>
+                                <input v-model="birthDate" name="birthDate" id="birthDate" type="date" class="form-control">
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <hr>
+                    <h6 class="h6 mb-3">
+                        <span class="mr-2">Contact Information</span>
+                    </h6>
+                    <div class="form-group" v-bind:data-error="errors['email']" v-on:click="errors.email=false">
+                        <label for="email" class="mr-1">Email Address</label>
+                        <input v-model="email" name="email" id="email" type="email" class="form-control">
+                    </div>
+                    <div class="form-group" v-bind:data-error="errors['mobileNumber']" v-on:click="errors.mobileNumber=false">
+                        <label for="mobileNumber" class="mr-1">Mobile Number</label>
+                        <input v-model="mobileNumber" name="mobileNumber" id="mobileNumber" placeholder="09101234560" type="number" class="form-control">
+                    </div>
+                    <h6 class="h6 mb-3">
+                        <span class="mr-2">In case of Emergency</span>
+                    </h6>
+                    <div class="form-row">
+                        <div class="col-6">
+                            <div class="form-group" :data-error="errors['guardianName']" @click="errors.guardianName=false">
+                                <label for="guardianName">Parent / Guardian</label>
+                                <input @blur="capitalize('guardianName')" v-model="guardianName" name="guardianName" id="guardianName" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group" :data-error="errors['guardianNumber']" @click="errors.guardianNumber=false">
+                                <label for="guardianNumber">Parent / Guardian Contact</label>
+                                <input v-model="guardianNumber" name="guardianNumber" id="guardianNumber" placeholder="09101234560" type="number" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="col-12">
+                            <div class="form-group" :data-error="errors.address" @click="errors.address=false">
+                                <label for="address">Address</label>
+                                <input v-model="address" name="address" id="address" type="hidden" class="form-control">
+                                <autocomplete
+                                    initial-value=""
+                                    :initial-display="address"
+                                    placeholder="Type your barangay and city/municipality..."
+                                    :source="dataSourceAddress"
+                                    input-class="form-control"
+                                    :request-headers="headers"
+                                    v-on:selected="onSelectAddress"
+                                    v-on:clear="address=''"
+                                    >
+                                </autocomplete>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="recaptchaToken" v-model="recaptchaToken">
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <!-- <div class="cf-turnstile" data-sitekey="0x4AAAAAAADaxF-IHbsdGFvm" data-callback="onTurnstile" data-size="normal"></div> -->
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <button class="btn btn-lg btn-primary">Submit Request</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="{{app.url}}/js/vuejs-auto-complete.js"></script>
+<script src="{{app.url}}/js/vuejs-auto-complete-extend.js"></script>
+<script src="https://www.google.com/recaptcha/api.js?render=6LdZ4B4qAAAAAIJlZFVB1-dMraZJvcMotuEZ3JLK"></script>
+<!-- <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script> -->
+<script>
+    const vApp = new Vue({
+        el: '#vApp',
+        delimiters: ["${", "}"],
+        mixins: [
+            window.vueJsAutoCompleteExtendMixin
+        ],
+        components: {
+            'autocomplete': window["vuejs-autocomplete"]
+        },
+        data: {
+            recaptchaToken: '',
+            errors: {
+                accountType: false,
+                idNumber: false,
+                course: false,
+                firstName: false,
+                middleName: false,
+                lastName: false,
+                suffix: false,
+                gender: false,
+                bloodType: false,
+                birthDate: false,
+
+                email: false,
+                mobileNumber: false,
+
+                guardianName: false,
+                guardianNumber: false,
+                address: false,
+            },
+            pending: false,
+            accountType: 'Student',
+            idNumber: '',
+            course: '',
+            firstName: '',
+            middleName: '',
+            noMiddle: false,
+            lastName: '',
+            suffix: '',
+            gender: '',
+            bloodType: '',
+            birthDate: '',
+
+            email: '',
+            mobileNumber: '',
+            token: '', // turnstile token
+
+            guardianName: '',
+            guardianNumber: '',
+            address: '',
+        },
+        computed: {
+           age: function(){
+            let age = moment().diff(moment(this.birthDate), 'years')
+            if(age > 1 && age < 100){
+                return `(${age} years old)`
+            }
+            return ''
+           }
+        },
+        watch: {
+           
+        },
+        mounted: function () {
+           
+            
+        },
+        methods: {
+            onSelectCourse: function(o){
+                // this.courseId = o.value
+                this.course = o.display
+            },
+            dataSourceCourse: function(input) {
+                return '/courses?s=' + input
+            },
+            onSelectAddress: function(o){
+                // this.courseId = o.value
+                this.address = o.display
+            },
+            dataSourceAddress: function(input) {
+                return '/address?s=' + input
+            },
+            capitalize: function (name) {
+                let value = `${this[name]}`
+                value = value.split(' ').map(v => {
+                    v = (v) ? `${v}`.trim() : ''
+                    if (v.length > 2) {
+                        v = _.capitalize(v)
+                    }
+
+                    return v
+                }).join(' ')
+                this[name] = value
+            },
+            onSubmit: function () {
+                try {
+                    const me = this;
+                    Object.keys(this.$data).forEach(key => {
+                        if(typeof this[key] === 'string'){
+                            this[key] = this[key].trim()
+                        }
+                    });
+                    if (!me.accountType) {
+                        me.errors['accountType'] = true
+                        throw new Error('Please specify the Account Type.')
+                    }
+                    if (!me.idNumber) {
+                        me.errors['idNumber'] = true
+                        throw new Error('Please specify the ID Number.')
+                    } else {
+                        if(me.idNumber.length < 11){
+                            me.errors['idNumber'] = true
+                            throw new Error('Please check the ID Number. Must be 11 characters long.')
+                        }
+                    }
+                    if (!me.course) {
+                        me.errors['course'] = true
+                        throw new Error('Please specify the Course.')
+                    }
+                    if (!me.firstName) {
+                        me.errors['firstName'] = true
+                        throw new Error('Please specify the First Name.')
+                    }
+                    if (!me.middleName && !me.noMiddle) {
+                        me.errors['middleName'] = true
+                        throw new Error('Please specify the Middle Name.')
+                    }
+                    if (!me.lastName) {
+                        me.errors['lastName'] = true
+                        throw new Error('Please specify the Last Name.')
+                    }
+                    if (!me.gender) {
+                        me.errors['gender'] = true
+                        throw new Error('Please specify the Gender.')
+                    }
+                    if (me.bloodType == 0) {
+                        me.errors['bloodType'] = true
+                        throw new Error('Please specify the Blood Type.')
+                    }
+                    if (!me.birthDate) {
+                        me.errors['birthDate'] = true
+                        throw new Error('Please specify the Birth Date.')
+                    } else {
+                        const age = moment().diff(moment(me.birthDate), 'years')
+                        if(age < 15){
+                            me.errors['birthDate'] = true
+                            throw new Error(`Please double-check the Birth Date. Your age is only ${age} years old.`)
+                        } 
+                    }
+                    if (!me.email) {
+                        me.errors['email'] = true
+                        throw new Error('Please specify the email.')
+                    }
+                    if (!me.mobileNumber) {
+                        me.errors['mobileNumber'] = true
+                        throw new Error('Please specify the Mobile Number.')
+                    } else {
+                        if(me.mobileNumber.length < 11){
+                            me.errors['mobileNumber'] = true
+                            throw new Error('Please check the Mobile Number. Must be 11 characters long.')
+                        }
+                    }
+                    if (!me.guardianName) {
+                        me.errors['guardianName'] = true
+                        throw new Error('Please specify the Parent or Guardian.')
+                    }
+                    if (!me.guardianNumber) {
+                        me.errors['guardianNumber'] = true
+                        throw new Error('Please specify the Guardian Number.')
+                    } else {
+                        if(me.guardianNumber.length < 11){
+                            me.errors['guardianNumber'] = true
+                            throw new Error('Please check the Guardian Number. Must be 11 characters long.')
+                        }
+                    }
+                    if (!me.address) {
+                        me.errors['address'] = true
+                        throw new Error('Please specify the Address.')
+                    }
+                    
+                    // if (!me.email) {
+                    //     me.errors['email'] = true
+                    //     throw new Error('Please specify the Alternative Email.')
+                    // } else {
+                    //     if (/^[\w-\.+]+@([\w-]+\.)+[\w-]{2,4}$/g.test(me.email) === false) {
+                    //         me.errors['email'] = true
+                    //         throw new Error('Invalid email.')
+                    //     } else {
+                    //         let domain = me.email?.split('@')?.at(-1)
+                    //         if (['gsu.edu.ph'].includes(domain)) {
+                    //             me.errors['email'] = true
+                    //             throw new Error('Please use your personal Gmail not your GSU email.')
+                    //         }
+                    //     }
+                    // }
+                    // if (!me.mobileNumber) {
+                    //     me.errors['mobileNumber'] = true
+                    //     throw new Error('Please specify the Mobile Number.')
+                    // }
+                    
+
+                    me.pending = true;
+                    grecaptcha.ready(function() {
+                        grecaptcha.execute('6LdZ4B4qAAAAAIJlZFVB1-dMraZJvcMotuEZ3JLK', {action: 'submit'}).then(function(token) {
+                            me.recaptchaToken = token;
+                            me.$nextTick(function() {
+                                me.$refs.form.submit();
+                            });
+                        });
+                    });
+
+                } catch (err) {
+                    alert(err)
+                }
+            }
+        }
+    });
+    function onTurnstile(token){
+        vApp.token = token
+    }
+</script>
+{% endblock %}
