@@ -70,7 +70,7 @@ router.get('/services/thanks', async (req, res, next) => {
     }
 });
 
-router.get('/courses', middlewares.requireAuthUser, async (req, res, next) => {
+router.get('/courses', async (req, res, next) => {
     try {
         let search = lodash.get(req, 'query.s', '');
         search = new RegExp(search, 'i')
@@ -83,7 +83,7 @@ router.get('/courses', middlewares.requireAuthUser, async (req, res, next) => {
     }
 });
 
-router.get('/address', middlewares.requireAuthUser, async (req, res, next) => {
+router.get('/address', async (req, res, next) => {
     try {
         let search = lodash.get(req, 'query.s', '');
         const phAddress = new PhAddress()
