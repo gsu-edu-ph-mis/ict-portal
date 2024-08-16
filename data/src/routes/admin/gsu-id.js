@@ -96,70 +96,15 @@ router.post('/admin/gsuid/delete/:gsuidId', middlewares.getGsuid({ raw: false })
     }
 });
 
-// process
-router.get('/admin/gsuid/process/:gsuidId', middlewares.getGsuid(), async (req, res, next) => {
+router.get('/admin/gsuid/process/:gsuidId', middlewares.getGsuid({ raw: false }), async (req, res, next) => {
     try {
         let gsuid = res.gsuid
-        if (gsuid.status !== 1) {
-            gsuid.gsumail = `${gsuid.firstName.toLowerCase()}.${gsuid.lastName.toLowerCase()}@gsu.edu.ph`.replace('ñ', 'n').replace(/ /g, '') // remove spaces ñ
-            gsuid.password = passwordMan.genPassphrase(4)
-        }
-
-        if (ENV !== 'dev') {
-            let userPresence = await googleAdmin.checkUser(gsuid.gsumail)
-            if (userPresence) {
-                flash.error(req, 'gsuid', `${gsuid.gsumail} is already taken. Please use a different GSU Email Address.`)
-            }
-        }
-        let data = {
-            flash: flash.get(req, 'gsuid'),
-            gsuid: gsuid,
-            password: req.query?.password
-        }
-        // return res.send(data)
-        res.render('admin/gsuid/process.html', data);
-    } catch (err) {
-        next(err);
-    }
-});
-router.post('/admin/gsuid/process/:gsuidId', middlewares.getGsuid({ raw: false }), async (req, res, next) => {
-    try {
-        let gsuid = res.gsuid
-        let body = req.body
-
-        let orgUnitPath = '/Student'
-        if (body.accountType == 'Faculty') {
-            orgUnitPath = '/Employee';
-        } else if (body.accountType == 'Staff') {
-            orgUnitPath = '/Employee';
-        } else if (body.accountType == 'Office') {
-            orgUnitPath = '/Offices';
-        }
-
-        const user = {
-            primaryEmail: body.gsumail,
-            name: {
-                givenName: body.firstName,
-                familyName: body.lastName,
-            },
-            password: body.password, // Ensure the password meets Google Workspace requirements
-            changePasswordAtNextLogin: false,
-            orgUnitPath: orgUnitPath
-        };
-        if (ENV !== 'dev') {
-            await googleAdmin.createUser(user)
-        }
-        gsuid.accountType = body.accountType
-        gsuid.idNumber = body.idNumber
-        gsuid.firstName = body.firstName
-        gsuid.middleName = body.middleName
-        gsuid.lastName = body.lastName
-        gsuid.gsumail = body.gsumail
+       
         gsuid.status = 1
         await gsuid.save()
 
-        flash.ok(req, 'gsuid', `GSU account created.`)
-        res.redirect(`/admin/gsuid/process/${gsuid.id}?password=${body.password}`)
+        flash.ok(req, 'gsuid', `GSU ID app. status updated.`)
+        res.redirect(`/admin/gsuid/all`)
     } catch (err) {
         next(err);
     }
