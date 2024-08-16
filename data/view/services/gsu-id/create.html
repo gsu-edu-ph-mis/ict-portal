@@ -37,14 +37,14 @@
                         <span class="mr-2">Personal Information</span>
                     </h6>
                     <div class="form-row">
-                        <div class="col-6">
+                        <div class="col-md-6">
                             <div class="form-group" v-bind:data-error="errors['firstName']" v-on:click="errors.firstName=false">
                                 <label for="firstName" class="mr-1">First Name</label>
                                 <input @blur="capitalize('firstName')" v-model="firstName" name="firstName" id="firstName" type="text" class="form-control">
                             </div>
                         </div>
                
-                        <div class="col-6">
+                        <div class="col-md-6">
                             <div class="form-group" v-bind:data-error="errors['middleName']" v-on:click="errors.middleName=false">
                                 <div class="form-row">
                                     <div class="col-md-5">
@@ -62,13 +62,13 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="col-6">
+                        <div class="col-8">
                             <div class="form-group" v-bind:data-error="errors['lastName']" v-on:click="errors.lastName=false">
                                 <label for="lastName" class="mr-1">Last Name</label>
                                 <input @blur="capitalize('lastName')" v-model="lastName" name="lastName" id="lastName" type="text" class="form-control">
                             </div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-4">
                             <div class="form-group" :data-error="errors['suffix']" @click="errors.suffix=false">
                                 <label for="suffix">Suffix</label>
                                 <select v-model="suffix" name="suffix" id="suffix" class="form-control">
@@ -138,13 +138,13 @@
                         <span class="mr-2">In case of Emergency</span>
                     </h6>
                     <div class="form-row">
-                        <div class="col-6">
+                        <div class="col-md-6">
                             <div class="form-group" :data-error="errors['guardianName']" @click="errors.guardianName=false">
                                 <label for="guardianName">Parent / Guardian</label>
                                 <input @blur="capitalize('guardianName')" v-model="guardianName" name="guardianName" id="guardianName" type="text" class="form-control">
                             </div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-md-6">
                             <div class="form-group" :data-error="errors['guardianNumber']" @click="errors.guardianNumber=false">
                                 <label for="guardianNumber">Parent / Guardian Contact</label>
                                 <input v-model="guardianNumber" name="guardianNumber" id="guardianNumber" placeholder="09101234560" type="number" class="form-control">
