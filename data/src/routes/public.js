@@ -71,29 +71,10 @@ router.post('/login', async (req, res, next) => {
                 const payload = ticket.getPayload();
                 // const userid = payload['sub'];
                 // console.log(`payload`, payload)
-                /*
-                {
-                    iss: 'https://accounts.google.com',
-                    nbf: 1678458819,
-                    aud: '626719409676-33r3r1rcai88462q3p70kj89hshco5s7.apps.googleusercontent.com',
-                    sub: '115284064957933519698',
-                    hd: 'gsc.edu.ph',
-                    email: 'nico.amarilla@gsc.edu.ph',
-                    email_verified: true,
-                    azp: '626719409676-33r3r1rcai88462q3p70kj89hshco5s7.apps.googleusercontent.com',
-                    name: 'Nico Amarilla',
-                    picture: 'https://lh3.googleusercontent.com/a/AGNmyxb1kr_FuOm6A5m7DS5plgWj6-sK4I7qCdziqK4z=s96-c',
-                    given_name: 'Nico',
-                    family_name: 'Amarilla',
-                    iat: 1678459119,
-                    exp: 1678462719,
-                    jti: 'fed5c83dc8ee604fc3bba58b5d987163176e7ed7'
-                }
-                */
                 user = await req.app.locals.db.models.User.findOne({ where: { username: payload.email } })
                 if (!user) {
                     let roles = ['client']
-                    if (['ict@gsu.edu.ph', 'nico.amarilla@gsu.edu.ph', 'johnmichael.gadot@gsu.edu.ph', 'mark.nolasco@gsu.edu.ph', 'rocsan.cantuja@gsu.edu.ph', 'sieryl.laudato@gsu.edu.ph'].includes(payload.email)) {
+                    if (['ict@gsu.edu.ph', 'nico.amarilla@gsu.edu.ph', 'crisvincent.ferrer@gsu.edu.ph', 'mark.nolasco@gsu.edu.ph', 'rocsan.cantuja@gsu.edu.ph', 'sieryl.laudato@gsu.edu.ph', 'johnmichael.gadot@gsu.edu.ph'].includes(payload.email)) {
                         roles = ['admin']
                     }
                     user = req.app.locals.db.models.User.build({
