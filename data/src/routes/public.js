@@ -24,6 +24,24 @@ router.get('/', async (req, res, next) => {
     }
 });
 
+router.get('/ga', async (req, res, next) => {
+    try {
+
+        res.redirect('/services/gsu-account')
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/id', async (req, res, next) => {
+    try {
+
+        res.redirect('/services/gsu-id')
+    } catch (err) {
+        next(err);
+    }
+});
+
 router.get('/about-us', async (req, res, next) => {
     try {
 
