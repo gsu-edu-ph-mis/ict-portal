@@ -40,5 +40,11 @@ module.exports = {
         requestBody: user,
       });
       return res
+  },
+  deleteUser: async (email) => {
+    const res = await admin.users.delete({
+      userKey: email, // Email or user ID of the user to delete
+    });
+    return res
   }
 }
