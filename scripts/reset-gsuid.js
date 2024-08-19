@@ -41,8 +41,8 @@ const dbConn = require('../data/src/db-connect');
 
     try {
         let MODEL = require('../data/src/models/gsuid')('Gsuid', dbInstance)
-        await MODEL.drop()
-        await MODEL.sync()
+        // await MODEL.drop()
+        await MODEL.sync({ alter: true })
 
         console.log('Clearing collection...')
 

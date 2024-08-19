@@ -51,6 +51,9 @@ module.exports = (modelName, sequelize) => {
         status: {
             type: DataTypes.INTEGER,
         },
+        course: {
+            type: DataTypes.STRING,
+        },
     }, {
         // Other model options go here
     })
