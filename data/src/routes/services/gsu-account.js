@@ -54,7 +54,7 @@ router.post('/services/gsu-account', async (req, res, next) => {
             console.log(response)
             let score = lodash.get(response, 'score', 0.0)
             if (score < 0.5) {
-                throw new Error(`Security error.`)
+                // throw new Error(`Security error.`)
             }
 
 
