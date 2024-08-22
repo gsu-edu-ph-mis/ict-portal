@@ -1,6 +1,6 @@
 {% extends "document.html" %}
 {% block body %}
-<div class="row">
+<div id="vApp" v-cloak class="row">
     <div class="col-12 pt-5">
         <ul class="nav nav-tabs">
             <li class="nav-item">
@@ -19,42 +19,73 @@
                 <div class="col-md-6">
                 </div>
                 <div class="col-md-6">
-                    <form action="/admin/gaccount/all">
-                        <input value="{{s}}" type="search" placeholder="Type last name or id number eg. id2024-1-1234" name="s" class="form-control">
+                    <form ref="form" action="/admin/gaccount/all">
+                        <input @search="onSearchChange" v-model="search" value="{{s}}" type="search" placeholder="Type last name or id number eg. id2024-1-1234" name="s" class="form-control">
                     </form>
                 </div>
             </div>
+            {%- if s %}
+                <p>Search results for: <em>{{s}}</em></p>
+            {% else %}
             <div class="d-flex align-items-center justify-content-center m-3">
                 <a href="?date={{prevDate|format_date('YYYY-MM-DD')}}" class="btn btn-sm btn-light">&laquo;</a>
                 <span class="ml-3 mr-3">{{momentDate|format_date('MMM DD, YYYY')}}</span>
                 <a href="?date={{nextDate|format_date('YYYY-MM-DD')}}" class="btn btn-sm btn-light">&raquo;</a>
-                
             </div>
+            {% endif -%}
             {%- if rows.length <= 0 %}
                 <div class="alert alert-info">No applications. </div>
             {% else %}
-                <p>Showing <strong>{{rows.length}}</strong> applications. <strong class="text-success">{{processedCount}}</strong> processed. <strong class="text-danger">{{unprocessedCount}}</strong> unprocessed.</p>
+                <p>Showing <strong>{{rows.length}}</strong> applications. <strong class="text-success">{{processed.length}}</strong> processed. <strong class="text-danger">{{unprocessed.length}}</strong> unprocessed.</p>
                 <div class="table-responsive mb-0">
                     <table class="table table-sm table-striped mb-0">
                         <tr>
                             <th width="2%">#</th>
-                            <th width="10%">ID No.</th>
-                            <th width="20%" class="d-none d-md-table-cell">Created</th>
-                            <th width="10%" class="d-none d-md-table-cell">Type</th>
-                            <th>Last Name</th>
-                            <th>First Name</th>
-                            <th>Middle Name</th>
+                            <th width="20%">Created</th>
+                            <th width="20%">Last Name</th>
+                            <th width="20%">First Name</th>
+                            <th class="d-none d-md-table-cell">Middle Name</th>
                             <th width="20%"></th>
                         </tr>
-                        {% for row in rows %}
+                        {% for row in unprocessed %}
                         <tr>
                             <td class="">{{loop.index}}</td>
-                            <td class=""><a href="?s=id{{row.idNumber}}">{{row.idNumber}}</a></td>
-                            <td class="font-italic d-none d-md-table-cell">{{row.createdAt|format_date('MMM DD, YYYY hh:mm A')}}</td>
-                            <td class=" d-none d-md-table-cell">{{row.accountType}}</td>
-                            <td class="">{{row.lastName}}</td>
+                            <td class="font-italic">{{row.createdAt|format_date('MMM DD, YYYY hh:mm A')}}</td>
+                            <td class=""><a href="?s={{row.lastName}}">{{row.lastName}}</a></td>
                             <td class="">{{row.firstName}}</td>
-                            <td class="">{{row.middleName}}</td>
+                            <td class="d-none d-md-table-cell">{{row.middleName}}</td>
+                            <td class="text-right d-flex align-items-center justify-content-end">
+                                {%- if row.status === 1 %}
+                                    <a href="/admin/gaccount/process/{{row.id}}" class="text-success text-decoration-none mr-3">
+                                        <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Done</title><path fill="currentColor" d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" /></svg>
+                                    </a>
+
+                                {% else %}
+                                    <a href="/admin/gaccount/process/{{row.id}}" class="mr-3">Process</a>
+
+                                {% endif -%}
+                                <a class="text-danger font-weight-bold text-decoration-none" href="/admin/gaccount/delete/{{row.id}}" title="Delete">✗</a>
+                                <!-- <a href="https://icto.gsu.edu.ph/services/gw_form.php?accountType={{row.accountType}}&idNumber={{row.idNumber}}&firstName={{row.firstName}}&middleName={{row.middleName}}&lastName={{row.lastName}}&email={{row.email}}&mobileNumber={{row.mobileNumber}}" target="_blank">Process</a> | <a class="text-danger font-weight-bold" href="/admin/gaccount/delete/{{row.id}}">✗</a> -->
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {%- if processed.length > 0 %}
+                        <tr>
+                            <th>#</th>
+                            <th>Created</th>
+                            <th>Last Name</th>
+                            <th>First Name</th>
+                            <th class="d-none d-md-table-cell">Middle Name</th>
+                            <th></th>
+                        </tr>
+                        {% endif -%}
+                        {% for row in processed %}
+                        <tr>
+                            <td class="text-success">{{loop.index}}</td>
+                            <td class="font-italic">{{row.createdAt|format_date('MMM DD, YYYY hh:mm A')}}</td>
+                            <td class=""><a href="?s={{row.lastName}}">{{row.lastName}}</a></td>
+                            <td class="">{{row.firstName}}</td>
+                            <td class="d-none d-md-table-cell"></td>
                             <td class="text-right d-flex align-items-center justify-content-end">
                                 {%- if row.status === 1 %}
                                     <a href="/admin/gaccount/process/{{row.id}}" class="text-success text-decoration-none mr-3">
@@ -79,4 +110,27 @@
 {% endblock %}
 {% block scripts %}
 {{ super() }}
+<script>
+    const vApp = new Vue({
+        el: '#vApp',
+        delimiters: ["${", "}"],
+        mixins: [
+        ],
+        components: {
+        },
+        data: {
+            search: '{{s}}'
+        },
+        methods: {
+            onSearchChange: function(){
+                const me = this
+                if(me.search === ''){
+                    me.$nextTick(function() {
+                        me.$refs.form.submit();
+                    });
+                }
+            }
+        }
+    })
+</script>
 {% endblock %}

@@ -61,8 +61,8 @@ router.get('/admin/gsuid/all', async (req, res, next) => {
             prevDate: momentDate.clone().subtract(1, 'day'),
             nextDate: momentDate.clone().add(1, 'day'),
             rows: gaccounts,
-            processedCount: gaccounts.filter(i => i.status === 1).length,
-            unprocessedCount: gaccounts.filter(i => i.status !== 1).length,
+            processed: gaccounts.filter(i => i.status === 1),
+            unprocessed: gaccounts.filter(i => i.status !== 1),
             s: s,
             flash: flash.get(req, 'gsuid')
         }
