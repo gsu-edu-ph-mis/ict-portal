@@ -39,14 +39,16 @@
                 <p>Showing <strong>{{rows.length}}</strong> applications. <strong class="text-success">{{processed.length}}</strong> processed. <strong class="text-danger">{{unprocessed.length}}</strong> unprocessed.</p>
                 <div class="table-responsive mb-0">
                     <table class="table table-sm table-striped mb-0">
-                        <tr>
-                            <th width="2%">#</th>
-                            <th width="20%">Created</th>
-                            <th width="20%">Last Name</th>
-                            <th width="20%">First Name</th>
-                            <th class="d-none d-md-table-cell">Middle Name</th>
-                            <th width="20%"></th>
-                        </tr>
+                        {%- if unprocessed.length > 0 %}
+                            <tr>
+                                <th width="2%">#</th>
+                                <th width="20%">Created</th>
+                                <th width="20%">Last Name</th>
+                                <th width="20%">First Name</th>
+                                <th class="d-none d-md-table-cell">Middle Name</th>
+                                <th width="20%"></th>
+                            </tr>
+                        {% endif -%}
                         {% for row in unprocessed %}
                         <tr>
                             <td class="">{{loop.index}}</td>
