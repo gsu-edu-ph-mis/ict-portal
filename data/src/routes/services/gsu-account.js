@@ -53,8 +53,8 @@ router.post('/services/gsu-account', async (req, res, next) => {
             response = await response.json()
             console.log(response)
             let score = lodash.get(response, 'score', 0.0)
-            if (score < 0.5) {
-                // throw new Error(`Security error.`)
+            if (score < CONFIG.recaptchav3.threshold) {
+                throw new Error(`Security error.`)
             }
 
 

@@ -58,6 +58,7 @@
   },
   "recaptchav3": {
     "enable": true,
+    "threshold": 0.4,
     "clientKey": "6LdZ4B4qAAAAAIJlZFVB1-dMraZJvcMotuEZ3JLK"
   },
   "loginDelay": 0
