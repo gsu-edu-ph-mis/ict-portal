@@ -96,10 +96,54 @@ router.post('/admin/gsuid/delete/:gsuidId', middlewares.getGsuid({ raw: false })
     }
 });
 
+// Allow GSU account to be created when applied for ID
+router.get('/admin/gsuid/process-gsuaccount/:gsuidId', middlewares.antiCsrfCheck, middlewares.getGsuid({ raw: false }), async (req, res, next) => {
+    try {
+        let gsuid = res.gsuid
+
+        let data = {}
+        data.idNumber = gsuid.idNumber
+        data.firstName = gsuid.firstName
+        data.middleName = gsuid.middleName
+        data.lastName = gsuid.lastName
+
+        let found = await req.app.locals.db.models.Gaccount.findOne({
+            where: {
+                firstName: {
+                    [Sequelize.Op.like]: `${data.firstName}`
+                },
+                middleName: {
+                    [Sequelize.Op.like]: `${data.middleName}`
+                },
+                lastName: {
+                    [Sequelize.Op.like]: `${data.lastName}`
+                }
+            }
+        })
+        if (found) {
+            return res.redirect(`/admin/gaccount/process/${found.id}`)
+        }
+
+        let gaccount = req.app.locals.db.models.Gaccount.build({
+            uid: `${passwordMan.genPasscode(4)}`,
+            accountType: gsuid.accountType,
+            idNumber: data.idNumber,
+            firstName: data.firstName,
+            middleName: data.middleName,
+            lastName: data.lastName,
+        })
+        await gaccount.save()
+
+        res.redirect(`/admin/gaccount/process/${gaccount.id}`)
+    } catch (err) {
+        next(err);
+    }
+});
+
 router.get('/admin/gsuid/process/:gsuidId', middlewares.getGsuid({ raw: false }), async (req, res, next) => {
     try {
         let gsuid = res.gsuid
-       
+
         gsuid.status = 1
         await gsuid.save()
 
@@ -112,7 +156,7 @@ router.get('/admin/gsuid/process/:gsuidId', middlewares.getGsuid({ raw: false })
 router.get('/admin/gsuid/unprocess/:gsuidId', middlewares.getGsuid({ raw: false }), async (req, res, next) => {
     try {
         let gsuid = res.gsuid
-       
+
         gsuid.status = 0
         await gsuid.save()
 

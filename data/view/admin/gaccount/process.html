@@ -24,37 +24,68 @@
             </div>
 
             {%- if gaccount.status === 1 %}
-            <div class="alert alert-success">Please take a photo of your login.</div>
-            <table class="table table-sm">
-                <tr>
-                    <td>GSU Account Email</td>
-                    <td>
-                        <div class="text-success font-weight-bold">{{gaccount.gsumail}}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Password</td>
-                    <td><div class="text-success font-weight-bold">{{password}}</div></td>
-                </tr>
-                <tr>
-                    <td>Account Type</td>
-                    <td>${accountType}</td>
-                </tr>
-                <tr>
-                    <td>ID Number</td>
-                    <td>${idNumber}</td>
-                </tr>
-                <tr>
-                    <td>Name</td>
-                    <td>${firstName} ${middleName} ${lastName}</td>
-                </tr>
-                
-                <tr>
-                    <td>Created</td>
-                    <td>{{gaccount.createdAt|format_date('MMM DD YYYY hh:mm:ss A')}}</td>
-                </tr>
-            </table>
+            {% if password %}
+                <div class="alert alert-success">Please take a photo of your login.</div>
+                <table class="table table-sm">
+                    <tr>
+                        <td>GSU Account Email</td>
+                        <td>
+                            <div class="text-success font-weight-bold">{{gaccount.gsumail}}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Password</td>
+                        <td><div class="text-success font-weight-bold">{{password}}</div></td>
+                    </tr>
+                    <tr>
+                        <td>Account Type</td>
+                        <td>${accountType}</td>
+                    </tr>
+                    <tr>
+                        <td>ID Number</td>
+                        <td>${idNumber}</td>
+                    </tr>
+                    <tr>
+                        <td>Name</td>
+                        <td>${firstName} ${middleName} ${lastName}</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Created</td>
+                        <td>{{gaccount.createdAt|format_date('MMM DD YYYY hh:mm:ss A')}}</td>
+                    </tr>
+                </table>
 
+                {% else %}
+                <div class="alert alert-warning">Account already exists.</div>
+                <table class="table table-sm">
+                    <tr>
+                        <td>GSU Account Email</td>
+                        <td>
+                            <div class="text-success font-weight-bold">{{gaccount.gsumail}}</div>
+                        </td>
+                    </tr>
+                   
+                    <tr>
+                        <td>Account Type</td>
+                        <td>${accountType}</td>
+                    </tr>
+                    <tr>
+                        <td>ID Number</td>
+                        <td>${idNumber}</td>
+                    </tr>
+                    <tr>
+                        <td>Name</td>
+                        <td>${firstName} ${middleName} ${lastName}</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Created</td>
+                        <td>{{gaccount.createdAt|format_date('MMM DD YYYY hh:mm:ss A')}}</td>
+                    </tr>
+                </table>
+
+                {% endif %}
             {% else %}
             
             <form ref="form" v-on:submit.prevent="onSubmit" action="" method="POST">
