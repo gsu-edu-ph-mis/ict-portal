@@ -46,6 +46,7 @@ module.exports = {
     antiCsrfCheck: async (req, res, next) => {
         try {
             let acsrf = lodash.get(req, 'body.acsrf')
+            if(!acsrf) acsrf = lodash.get(req, 'query.acsrf')
 
             if (lodash.get(req, 'session.acsrf') === acsrf) {
                 return next();
