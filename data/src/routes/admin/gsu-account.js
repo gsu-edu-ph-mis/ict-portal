@@ -97,6 +97,19 @@ router.post('/admin/gaccount/delete/:gaccountId', middlewares.getGaccount({ raw:
 });
 
 // process
+router.get('/admin/gaccount/check-email/:email', async (req, res, next) => {
+    try {
+        let gsumail = req.params?.email
+        let userPresence = await googleAdmin.checkUser(gsumail)
+        if (userPresence) {
+            return res.send('no')
+        }
+        res.send('yes')
+    } catch (err) {
+        next(err);
+    }
+})
+
 router.get('/admin/gaccount/process/:gaccountId', middlewares.getGaccount(), async (req, res, next) => {
     try {
         let gaccount = res.gaccount
@@ -105,12 +118,7 @@ router.get('/admin/gaccount/process/:gaccountId', middlewares.getGaccount(), asy
             gaccount.password = passwordMan.genPassphrase(4)
         }
 
-        if (ENV !== 'dev') {
-            let userPresence = await googleAdmin.checkUser(gaccount.gsumail)
-            if (userPresence) {
-                flash.error(req, 'gaccount', `${gaccount.gsumail} is already taken. Please use a different GSU Email Address.`)
-            }
-        }
+
         let data = {
             flash: flash.get(req, 'gaccount'),
             gaccount: gaccount,
@@ -126,6 +134,13 @@ router.post('/admin/gaccount/process/:gaccountId', middlewares.getGaccount({ raw
     try {
         let gaccount = res.gaccount
         let body = req.body
+
+        // if (ENV !== 'dev') {
+        let userPresence = await googleAdmin.checkUser(body.gsumail)
+        if (userPresence) {
+            throw new Error(`${body.gsumail} is already taken. Please use a different GSU Email Address.`)
+        }
+        // }
 
         let orgUnitPath = '/Student'
         if (body.accountType == 'Faculty') {

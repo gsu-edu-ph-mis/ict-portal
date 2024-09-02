@@ -107,7 +107,12 @@
                 </h6>
                 <div class="form-group" v-bind:data-error="errors['gsumail']" v-on:click="errors.gsumail=false">
                     <label for="gsumail" class="mr-1">GSU Email Address</label>
-                    <input v-model="gsumail" name="gsumail" id="gsumail" type="email" class="form-control">
+                    <div class="form-row">
+                        <div class="col-8 col-md-9">
+                            <input v-model="gsumail" name="gsumail" id="gsumail" type="email" class="form-control">
+                        </div>
+                        <button @click="checkEmail(gsumail)" class="btn btn-light col-4 col-md-3" type="button">Check Email</button>
+                    </div>
                 </div>
                 <div class="form-group" v-bind:data-error="errors['password']" v-on:click="errors.password=false">
                     <label for="password" class="mr-1">Password</label>
@@ -135,6 +140,7 @@
         delimiters: ["${", "}"],
         mixins: [],
         data: {
+            pending: false,
             errors: {
                 accountType: false,
                 idNumber: false,
@@ -142,12 +148,10 @@
                 middleName: false,
                 lastName: false,
 
-                email: false,
                 mobileNumber: false,
                 gsumail: false,
                 password: false,
             },
-            pending: false,
             accountType: '{{gaccount.accountType}}',
             idNumber: '{{gaccount.idNumber}}',
             firstName: '{{gaccount.firstName}}',
@@ -156,7 +160,6 @@
             lastName: '{{gaccount.lastName}}',
             password: '{{password}}',
 
-            email: '{{gaccount.email}}',
             mobileNumber: '{{gaccount.mobileNumber}}',
             gsumail: '{{gaccount.gsumail}}',
             password: '{{gaccount.password}}',
@@ -165,14 +168,47 @@
            
         },
         watch: {
-           
+            
         },
-        mounted: function () {
-           
+        mounted: async function () {
+            const me = this
+            
+            await me.checkEmail(me.gsumail)
             
         },
         methods: {
-            onSubmit: function () {
+            checkEmail: async function(gsumail){
+                const me = this
+                try {
+
+                    me.pending = true
+                    let response = await fetch(`/admin/gaccount/check-email/${gsumail}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    
+                    let responseText = await response.text();
+                    if (!response.ok) {
+                        throw new Error(responseText)
+                    }
+                    
+                    me.pending = false
+
+                    me.errors.gsumail = (responseText === 'no') ? true : false
+                    if(me.errors.gsumail){
+                        alert(`Email not available.`);
+                    }
+                } catch(error){
+                    console.error(error)
+                    alert(error);
+                } finally {
+                    me.pending = false
+                }
+            },
+            onSubmit: async function () {
                 try {
                     const me = this;
                     Object.keys(this.$data).forEach(key => {
@@ -213,6 +249,8 @@
                             if (['gsu.edu.ph'].includes(domain) === false) {
                                 me.errors['gsumail'] = true
                                 throw new Error('Must end with @gsu.edu.ph')
+                            } else {
+
                             }
                         }
                     }
