@@ -65,7 +65,7 @@
                                 {% else %}
                                     <a href="/admin/gsuid/process/{{row.id}}" class="text-success mr-3">MARK DONE</a>
                                     <a onclick="return confirm(`Create GSU Account?`)" href="/admin/gsuid/process-gsuaccount/{{row.id}}?acsrf={{acsrf}}" class="text-success mr-3">G. Acct.</a>
-                                    <a href="http://180.193.222.75/ictu/request-form/ids-form?__svcIDValue=1&accountType={{row.accountType}}&idNumber={{row.idNumber}}&course={{row.course}}&firstName={{row.firstName}}&middleName={{row.middleName}}&lastName={{row.lastName}}&suffix={{row.suffix}}&gender={{row.gender|replace('M', 'male')|replace('F', 'female')}}&bloodType={{row.bloodType}}&birthDate={{row.birthDate}}&email={{row.email}}&mobileNumber={{row.mobileNumber}}&guardianName={{row.guardianName}}&guardianNumber={{row.guardianNumber}}&address={{row.address}}&campus=1" target="_blank" class="mr-3">Process</a> 
+                                    <a href="https://servicedesk.gsu.edu.ph//request-form/ids-form?__svcIDValue=1&accountType={{row.accountType}}&idNumber={{row.idNumber}}&course={{row.course}}&firstName={{row.firstName}}&middleName={{row.middleName}}&lastName={{row.lastName}}&suffix={{row.suffix}}&gender={{row.gender|replace('M', 'male')|replace('F', 'female')}}&bloodType={{row.bloodType}}&birthDate={{row.birthDate}}&email={{row.email}}&mobileNumber={{row.mobileNumber}}&guardianName={{row.guardianName}}&guardianNumber={{row.guardianNumber}}&address={{row.address}}&campus=1" target="_blank" class="mr-3">Process</a> 
 
                                 {% endif -%}
                                 <a class="text-danger font-weight-bold text-decoration-none" href="/admin/gsuid/delete/{{row.id}}" title="Delete">✗</a>
@@ -99,7 +99,7 @@
                                 {% else %}
                                     <a href="/admin/gsuid/process/{{row.id}}" class="text-success mr-3">MARK DONE</a>
                                     <a href="/admin/gsuid/process-gsuaccount/{{row.id}}" class="text-success mr-3">GSU Account</a>
-                                    <a href="http://180.193.222.75/ictu/request-form/ids-form?__svcIDValue=1&accountType={{row.accountType}}&idNumber={{row.idNumber}}&course={{row.course}}&firstName={{row.firstName}}&middleName={{row.middleName}}&lastName={{row.lastName}}&suffix={{row.suffix}}&gender={{row.gender|replace('M', 'male')|replace('F', 'female')}}&bloodType={{row.bloodType}}&birthDate={{row.birthDate}}&email={{row.email}}&mobileNumber={{row.mobileNumber}}&guardianName={{row.guardianName}}&guardianNumber={{row.guardianNumber}}&address={{row.address}}&campus=1" target="_blank" class="mr-3">Process</a> 
+                                    <a href="https://servicedesk.gsu.edu.ph//request-form/ids-form?__svcIDValue=1&accountType={{row.accountType}}&idNumber={{row.idNumber}}&course={{row.course}}&firstName={{row.firstName}}&middleName={{row.middleName}}&lastName={{row.lastName}}&suffix={{row.suffix}}&gender={{row.gender|replace('M', 'male')|replace('F', 'female')}}&bloodType={{row.bloodType}}&birthDate={{row.birthDate}}&email={{row.email}}&mobileNumber={{row.mobileNumber}}&guardianName={{row.guardianName}}&guardianNumber={{row.guardianNumber}}&address={{row.address}}&campus=1" target="_blank" class="mr-3">Process</a> 
 
                                 {% endif -%}
                                 <a class="text-danger font-weight-bold text-decoration-none" href="/admin/gsuid/delete/{{row.id}}" title="Delete">✗</a>
