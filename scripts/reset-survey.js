@@ -2,18 +2,18 @@
  * Clear survey
  * Usage: node scripts/reset-survey.js
  */
-//// Core modules
+// Core modules
 const path = require('path');
 
-//// External modules
+// External modules
 const lodash = require('lodash');
 
-//// Modules
+// Modules
 const pigura = require('pigura');
 
 
-//// First things first
-//// Save full path of our root app directory and load config and credentials
+// First things first
+// Save full path of our root app directory and load config and credentials
 global.APP_DIR = path.resolve(__dirname+'/../').replace(/\\/g, '/'); // Turn back slash to slash for cross-platform compat
 global.ENV = lodash.get(process, 'env.NODE_ENV', 'dev')
 

@@ -1,9 +1,9 @@
-//// Core modules
+// Core modules
 
-//// External modules
+// External modules
 const express = require('express');
 
-//// Modules
+// Modules
 
 // Routes
 let router = express.Router();

@@ -1,16 +1,16 @@
-//// Core modules
+// Core modules
 const url = require('url')
 
-//// External modules
+// External modules
 const express = require('express')
 const lodash = require('lodash')
 const moment = require('moment')
 const flash = require('kisapmata')
 const { Sequelize } = require('sequelize')
 
-//// Core modules
+// Core modules
 
-//// Modules
+// Modules
 const mailer = require('../../mailer');
 const middlewares = require('../../middlewares');
 const passwordMan = require('../../password-man');

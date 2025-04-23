@@ -3,15 +3,15 @@
  * @type {module:crypto}
  */
 
-//// Core modules
+// Core modules
 const crypto = require('crypto')
 const buffer = require('buffer')
 const util = require('util')
 
-//// External modules
+// External modules
 const lodash = require('lodash')
 
-//// Modules
+// Modules
 let randomBytesAsync = util.promisify(crypto.randomBytes)
 
 module.exports = {

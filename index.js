@@ -3,18 +3,18 @@
  * Load server module.
  */
 
-//// Core modules
+// Core modules
 const path = require('path');
 
-//// External modules
+// External modules
 const lodash = require('lodash');
 
-//// Modules
+// Modules
 const pigura = require('pigura');
 const packageJson = require('./package.json');
 
-//// First things first
-//// Save full path of our root app directory and load config and credentials
+// First things first
+// Save full path of our root app directory and load config and credentials
 global.APP_DIR = path.resolve(__dirname).replace(/\\/g, '/'); // Turn back slash to slash for cross-platform compat
 global.ENV = lodash.get(process, 'env.NODE_ENV', 'dev')
 
@@ -35,5 +35,5 @@ const credLoader = new pigura.ConfigLoader({
 global.CRED = credLoader.getConfig()
 global.PACKAGE_JSON = packageJson
 
-//// Create our app
+// Create our app
 require('./data/src/server')

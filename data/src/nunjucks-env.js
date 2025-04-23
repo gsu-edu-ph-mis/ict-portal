@@ -1,16 +1,16 @@
-//// Core modules
+// Core modules
 
-//// External modules
+// External modules
 const lodash = require('lodash');
 const nunjucks = require('nunjucks');
 const nunjucksFilters = require('nunjucks-filters');
 const moment = require('moment');
 
-//// Modules
+// Modules
 
 let dirView = CONFIG.app.dirs.view; // Path to view directory
 
-//// Setup view
+// Setup view
 // Setup nunjucks loader. See https://mozilla.github.io/nunjucks/api.html#loader
 let loaderFsNunjucks = new nunjucks.FileSystemLoader(dirView, CONFIG.nunjucks.loader);
 
@@ -75,5 +75,5 @@ env.addFilter('pixelScaled', (value, scale = 1) => {
     return parseFloat(value) * scale;
 });
 
-//// Export
+// Export
 module.exports = env;

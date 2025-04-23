@@ -1,12 +1,12 @@
 
-//// Core modules
+// Core modules
 const fs = require('fs')
 
-//// External modules
+// External modules
 const access = require('acrb')
 const lodash = require('lodash')
 
-//// Modules
+// Modules
 const uploader = require('./uploader')
 
 module.exports = {

@@ -1,6 +1,6 @@
-//// Core modules
+// Core modules
 
-//// External modules
+// External modules
 const { Sequelize } = require('sequelize')
 const moment = require('moment')
 

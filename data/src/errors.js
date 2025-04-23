@@ -1,9 +1,9 @@
-//// Core modules
+// Core modules
 
-//// External modules
+// External modules
 const lodash = require('lodash');
 
-//// Modules
+// Modules
 
 /*
 

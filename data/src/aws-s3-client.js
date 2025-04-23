@@ -1,6 +1,6 @@
-//// Core modules
+// Core modules
 
-//// External modules
+// External modules
 const { 
     S3Client,
     GetObjectCommand,
@@ -10,7 +10,7 @@ const {
 
 const presigner = require("@aws-sdk/s3-request-presigner")
 
-//// Modules
+// Modules
 
 
 const clientInstance = new S3Client({

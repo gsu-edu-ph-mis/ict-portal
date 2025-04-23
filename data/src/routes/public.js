@@ -1,14 +1,14 @@
-//// Core modules
+// Core modules
 let { timingSafeEqual } = require('crypto')
 const url = require('url');
 
-//// External modules
+// External modules
 const express = require('express')
 const flash = require('kisapmata')
 const lodash = require('lodash')
 const moment = require('moment')
 
-//// Modules
+// Modules
 // const mailer = require('../mailer')
 const passwordMan = require('../password-man')
 

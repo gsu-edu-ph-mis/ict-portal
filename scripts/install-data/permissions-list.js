@@ -3,11 +3,11 @@
  * Code should be updated together with this list.
  */
 
-//// Core modules
+// Core modules
 
-//// External modules
+// External modules
 
-//// Modules
+// Modules
 
 module.exports = [
 
@@ -17,7 +17,7 @@ module.exports = [
     'update_agenda',
     'delete_agenda',
 
-    ////// Sys admin stuff ////
+    //// Sys admin stuff ////
 
     'read_all_permission',
     'create_permission',

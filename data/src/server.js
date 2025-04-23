@@ -1,15 +1,15 @@
 (async () => {
-    //// Core modules
+    // Core modules
     const http = require('http')
 
-    //// External modules
+    // External modules
     const express = require('express')
     const bodyParser = require('body-parser')
     const cookieParser = require('cookie-parser')
     const lodash = require('lodash')
     const moment = require('moment')
 
-    //// Modules
+    // Modules
     const db = require('./db-connect')
     const errors = require('./errors')
     const nunjucksEnv = require('./nunjucks-env')
@@ -18,12 +18,12 @@
     const middlewares = require('./middlewares')
 
 
-    //// Create app
+    // Create app
     const app = express()
 
     const httpServer = http.createServer(app)
 
-    //// Setup view
+    // Setup view
     nunjucksEnv.express(app)
 
     // Connect to db
@@ -37,7 +37,7 @@
     // Remove express
     app.set('x-powered-by', false);
 
-    //// Middlewares
+    // Middlewares
 
     // Assign view variables once - on app start
     app.use(middlewares.perAppViewVars);
@@ -58,20 +58,20 @@
     // Cookies
     app.use(cookieParser());
 
-    //// Set express vars
+    // Set express vars
     // Indicates the app is behind a front-facing proxy, and to use the X-Forwarded-* headers to determine the connection and the IP address of the client.
     app.set('trust proxy', CONFIG.express.trustProxy);
 
 
-    //// Assign view variables per request
+    // Assign view variables per request
     app.use(middlewares.perRequestViewVars);
 
-    //// Sane titles
+    // Sane titles
     app.use(middlewares.saneTitles);
 
-    //// Socket IO middlewares and handlers
+    // Socket IO middlewares and handlers
 
-    //// Routes
+    // Routes
     app.use(routes);
 
     // Error handler

@@ -2,11 +2,11 @@
  * Roles are a group of permissions.
  */
 
-//// Core modules
+// Core modules
 
-//// External modules
+// External modules
 
-//// Modules
+// Modules
 const allPermissions = require('./permissions-list');
 
 const ROLES = [

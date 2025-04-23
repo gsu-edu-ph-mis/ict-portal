@@ -1,6 +1,6 @@
-//// Core modules
+// Core modules
 
-//// External modules
+// External modules
 const express = require('express')
 const lodash = require('lodash')
 const moment = require('moment')
@@ -9,9 +9,9 @@ const { Sequelize } = require('sequelize')
 const qr = require('qr-image')
 const sharp = require('sharp')
 
-//// Core modules
+// Core modules
 
-//// Modules
+// Modules
 const passwordMan = require('../password-man')
 const middlewares = require('../middlewares')
 const googleAdmin = require('../google-admin')
@@ -29,7 +29,7 @@ router.get('/admin/all', async (req, res, next) => {
     }
 });
 
-//// SURVEY
+// SURVEY
 router.get('/admin/survey/all', async (req, res, next) => {
     try {
         let s = req.query?.s

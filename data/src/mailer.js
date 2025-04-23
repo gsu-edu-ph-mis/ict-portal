@@ -4,12 +4,12 @@
  * 
  */
 
-//// Core modules
+// Core modules
 
-//// External modules
+// External modules
 const nodemailer = require('nodemailer');
 
-//// Modules
+// Modules
 const nunjucksEnv = require('./nunjucks-env')
 
 // AWS

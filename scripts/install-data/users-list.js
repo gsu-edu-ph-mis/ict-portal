@@ -2,11 +2,11 @@
  * Departmental accounts not specifically tied to a single individual.
  */
 
-//// Core modules
+// Core modules
 
-//// External modules
+// External modules
 
-//// Modules
+// Modules
 
 
 module.exports = [

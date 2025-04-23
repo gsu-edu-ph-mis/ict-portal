@@ -1,15 +1,15 @@
-//// Core modules
+// Core modules
 
-//// External modules
+// External modules
 const express = require('express')
 const lodash = require('lodash')
 const moment = require('moment')
 const flash = require('kisapmata')
 const { Sequelize } = require('sequelize')
 
-//// Core modules
+// Core modules
 
-//// Modules
+// Modules
 const passwordMan = require('../../password-man')
 const middlewares = require('../../middlewares')
 const googleAdmin = require('../../google-admin')
@@ -19,7 +19,7 @@ let router = express.Router()
 
 router.use('/admin/gaccount', middlewares.requireAdminUser)
 
-//// Google/GSU Account
+// Google/GSU Account
 router.get('/admin/gaccount/all', async (req, res, next) => {
     try {
         let momentDate = (req.query?.date) ? moment(req.query?.date) : moment()

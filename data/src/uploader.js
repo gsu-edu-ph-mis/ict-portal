@@ -1,17 +1,17 @@
-//// Core modules
+// Core modules
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
 const unlinkAsync = util.promisify(fs.unlink);
 
-//// External modules
+// External modules
 const lodash = require('lodash');
 const fileGuesser = require('guess-file-type');
 const sharp = require('sharp');
 const moment = require('moment');
 
-//// Modules
+// Modules
 const S3_CLIENT = require('./aws-s3-client')  // V3 SDK
 
 const localPrefix = '__incomplete-' // Uploaded file prefix

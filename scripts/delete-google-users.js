@@ -1,22 +1,22 @@
 /**
  * node scripts/delete-google-users.js
  */
-//// Core modules
+// Core modules
 const fs = require('fs');
 const path = require('path');
 const process = require('process');
 
-//// External modules
+// External modules
 const csvParser = require('csv-parser')
 const lodash = require('lodash');
 const moment = require('moment');
 const pigura = require('pigura');
 
-//// Modules
+// Modules
 
 
-//// First things first
-//// Save full path of our root app directory and load config and credentials
+// First things first
+// Save full path of our root app directory and load config and credentials
 global.APP_DIR = path.resolve(__dirname + '/../').replace(/\\/g, '/'); // Turn back slash to slash for cross-platform compat
 global.ENV = lodash.get(process, 'env.NODE_ENV', 'dev')
 

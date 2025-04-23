@@ -1,6 +1,6 @@
-//// Core modules
+// Core modules
 
-//// External modules
+// External modules
 const session = require('express-session'); // Session engine
 const SessionStore = require('express-session-sequelize')(session.Store);
 
