@@ -25,9 +25,16 @@ router.get('/admin/gsuid/all', async (req, res, next) => {
         let momentDate = (req.query?.date) ? moment(req.query?.date) : moment()
         let s = (req.query?.s) ? `${req.query?.s}`.trim() : ''
         let where = {}
+
+        const isNum = (str) => {
+            return !isNaN(str) && !isNaN(parseFloat(str));
+        }
+
         if (s) {
-            if (s.slice(0, 2) === 'id') {
-                where = lodash.set(where, 'idNumber', s.slice(2))
+            if (s.length === 4 && isNum(s.slice(0, 4))) {
+                where = lodash.set(where, 'uid', s)
+            } else if (s.length >= 10 && isNum(s.slice(0, 4))) {
+                where = lodash.set(where, 'idNumber', s)
             } else {
                 // where = {
                 //     lastName: ,
@@ -48,7 +55,7 @@ router.get('/admin/gsuid/all', async (req, res, next) => {
                 })
             }
         }
-        // console.log(where)
+        console.log(where)
         let gaccounts = await req.app.locals.db.models.Gsuid.findAll({
             where: where,
             order: [

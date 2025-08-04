@@ -10,7 +10,7 @@
                 </div>
                 <div class="col-md-6">
                     <form action="/admin/gsuid/all">
-                        <input value="{{s}}" type="search" placeholder="Type last name or id number eg. id2024-1-1234" name="s" class="form-control">
+                        <input value="{{s}}" type="search" placeholder="Type Last Name or Ref Number or ID number eg. 2024-1-1234" name="s" class="form-control">
                     </form>
                 </div>
             </div>
@@ -32,6 +32,7 @@
                         {%- if unprocessed.length > 0 %}
                             <tr>
                                 <th width="2%">#</th>
+                                <th width="2%">Ref.</th>
                                 <th width="20%">Created</th>
                                 <th width="20%">Last Name</th>
                                 <th width="20%">First Name</th>
@@ -42,6 +43,7 @@
                         {% for row in unprocessed %}
                         <tr>
                             <td>{{loop.index}}</td>
+                            <td>{{row.uid}}</td>
                             <td class="font-italic">{{row.createdAt|format_date('MMM DD, YYYY hh:mm A')}}</td>
                             <td><a href="?s={{row.lastName}}">{{row.lastName}} {{row.suffix}}</a></td>
                             <td>{{row.firstName}}</td>
