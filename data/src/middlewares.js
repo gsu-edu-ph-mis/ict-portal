@@ -214,10 +214,11 @@ module.exports = {
             courses = courses.map(e => {
                 e = e.split(',')
                 return {
-                    id: e.at(1),
-                    name: e.at(2)
+                    id: e.at(0),
+                    name: e.at(2) + ` (${e.at(1)})`
                 }
             })
+            // console.log(courses)
             req.app.locals.COURSES = courses
 
         next()

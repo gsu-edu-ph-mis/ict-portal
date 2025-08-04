@@ -23,7 +23,7 @@ router.use('/admin', middlewares.requireAdminUser)
 
 router.get('/admin/all', async (req, res, next) => {
     try {
-        res.redirect('/admin/gaccount/all')
+        res.redirect('/admin/gsuid/all')
     } catch (err) {
         next(err);
     }

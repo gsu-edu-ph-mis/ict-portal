@@ -79,6 +79,40 @@ router.get('/admin/gsuid/all', async (req, res, next) => {
     }
 });
 
+/*
+router.get('/admin/gsuid/all2', async (req, res, next) => {
+    try {
+        let where = {
+            course: {
+                [Sequelize.Op.ne]: null
+            }
+        }
+        let gsuids = await req.app.locals.db.models.Gsuid.findAll({
+            where: where,
+            order: [
+                ['status', 'ASC'],
+                ['createdAt', 'ASC'],
+            ]
+        })
+        for (let x = 0; x < gsuids.length; x++) {
+
+            let gsuId = gsuids[x]
+            let search = lodash.get(gsuId, 'course', '');
+            search = new RegExp(search, 'i')
+
+            let course = req.app.locals.COURSES.find(course => search.test(course.id) || search.test(course.name))
+            if(course){
+                gsuId.course = course.id
+                await gsuId.save()
+            }
+        }
+
+        res.send(gsuids);
+    } catch (err) {
+        next(err);
+    }
+});
+*/
 
 // Delete
 router.get('/admin/gsuid/delete/:gsuidId', middlewares.getGsuid(), async (req, res, next) => {
