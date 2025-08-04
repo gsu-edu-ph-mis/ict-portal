@@ -10,6 +10,7 @@ let router = express.Router();
 router.use(require('./routes/admin'));
 router.use(require('./routes/admin/gsu-account'));
 router.use(require('./routes/admin/gsu-id'));
+router.use(require('./routes/admin/aws'));
 router.use(require('./routes/public'));
 router.use(require('./routes/tools'));
 router.use(require('./routes/protected'));

@@ -1,0 +1,108 @@
+{% extends "document-fluid.html" %}
+{% block body %}
+<div class="row">
+    <div class="col-10 ml-auto mr-auto pt-5">
+        {% include 'admin/tabs.html' %}
+        <div class="tab-content p-3" style="border-radius:0 0 5px 5px;">
+            {% include 'parts/flash.html' %}
+            <div class="row mb-3 align-items-center">
+                <div class="col-md-6">
+                </div>
+                <div class="col-md-6">
+                    <form action="/admin/aws/all">
+                        <input value="{{s}}" type="search" placeholder="Type last name or id number eg. id2024-1-1234" name="s" class="form-control">
+                    </form>
+                </div>
+            </div>
+            {%- if s %}
+                <p>Search results for: <em>{{s}}</em></p>
+            {% else %}
+            <div class="d-flex align-items-center justify-content-center m-3">
+                <a href="?date={{prevDate|format_date('YYYY-MM-DD')}}" class="btn btn-sm btn-light">&laquo;</a>
+                <span class="ml-3 mr-3">{{momentDate|format_date('MMM DD, YYYY')}}</span>
+                <a href="?date={{nextDate|format_date('YYYY-MM-DD')}}" class="btn btn-sm btn-light">&raquo;</a>
+            </div>
+            {% endif -%}
+            {%- if rows.length <= 0 %}
+                <div class="alert alert-info">No applications. </div>
+            {% else %}
+                <p>Showing <strong>{{rows.length}}</strong> applications. <strong class="text-success">{{processed.length}}</strong> processed. <strong class="text-danger">{{unprocessed.length}}</strong> unprocessed.</p>
+                <div class="table-responsive mb-0">
+                    <table class="table table-sm table-striped mb-0">
+                        {%- if unprocessed.length > 0 %}
+                            <tr>
+                                <th width="2%">#</th>
+                                <th width="20%">Created</th>
+                                <th width="20%">Last Name</th>
+                                <th width="20%">First Name</th>
+                                <th class="d-none d-md-table-cell">Middle Name</th>
+                                <th width="25%"></th>
+                            </tr>
+                        {% endif -%}
+                        {% for row in unprocessed %}
+                        <tr>
+                            <td>{{loop.index}}</td>
+                            <td class="font-italic">{{row.createdAt|format_date('MMM DD, YYYY hh:mm A')}}</td>
+                            <td><a href="?s={{row.lastName}}">{{row.lastName}} {{row.suffix}}</a></td>
+                            <td>{{row.firstName}}</td>
+                            <td class="d-none d-md-table-cell">{{row.middleName}}</td>
+                            <td class="text-right d-flex align-items-center justify-content-end">
+                                {%- if row.status === 1 %}
+                                    <a href="/admin/gsuid/unprocess/{{row.id}}" class="text-success text-decoration-none mr-3">
+                                        <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Done</title><path fill="currentColor" d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" /></svg>
+                                    </a>
+
+                                {% else %}
+                                    <a href="/admin/gsuid/process/{{row.id}}" class="text-success mr-3">MARK DONE</a>
+                                    <a onclick="return confirm(`Create GSU Account?`)" href="/admin/gsuid/process-gsuaccount/{{row.id}}?acsrf={{acsrf}}" class="text-success mr-3">G. Acct.</a>
+                                    <a href="https://servicedesk.gsu.edu.ph//request-form/ids-form?__svcIDValue=1&accountType={{row.accountType}}&idNumber={{row.idNumber}}&course={{row.course}}&firstName={{row.firstName}}&middleName={{row.middleName}}&lastName={{row.lastName}}&suffix={{row.suffix}}&gender={{row.gender|replace('M', 'male')|replace('F', 'female')}}&bloodType={{row.bloodType}}&birthDate={{row.birthDate}}&email={{row.email}}&mobileNumber={{row.mobileNumber}}&guardianName={{row.guardianName}}&guardianNumber={{row.guardianNumber}}&address={{row.address}}&campus=1" target="_blank" class="mr-3">Process</a> 
+
+                                {% endif -%}
+                                <a class="text-danger font-weight-bold text-decoration-none" href="/admin/gsuid/delete/{{row.id}}" title="Delete">✗</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {%- if processed.length > 0 %}
+                        <tr>
+                            <th width="2%">#</th>
+                            <th width="20%">Created</th>
+                            <th width="20%">Last Name</th>
+                            <th width="20%">First Name</th>
+                            <th class="d-none d-md-table-cell">Middle Name</th>
+                            <th width="20%"></th>
+                        </tr>
+                        {% endif -%}
+
+                        {% for row in processed %}
+                        <tr>
+                            <td class="text-success">{{loop.index}}</td>
+                            <td class="font-italic">{{row.createdAt|format_date('MMM DD, YYYY hh:mm A')}}</td>
+                            <td><a href="?s={{row.lastName}}">{{row.lastName}}</a></td>
+                            <td>{{row.firstName}}</td>
+                            <td class="d-none d-md-table-cell">{{row.middleName}}</td>
+                            <td class="text-right d-flex align-items-center justify-content-end">
+                                {%- if row.status === 1 %}
+                                    <a href="/admin/gsuid/unprocess/{{row.id}}" class="text-success text-decoration-none mr-3">
+                                        <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Done</title><path fill="currentColor" d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" /></svg>
+                                    </a>
+
+                                {% else %}
+                                    <a href="/admin/gsuid/process/{{row.id}}" class="text-success mr-3">MARK DONE</a>
+                                    <a href="/admin/gsuid/process-gsuaccount/{{row.id}}" class="text-success mr-3">GSU Account</a>
+                                    <a href="https://servicedesk.gsu.edu.ph//request-form/ids-form?__svcIDValue=1&accountType={{row.accountType}}&idNumber={{row.idNumber}}&course={{row.course}}&firstName={{row.firstName}}&middleName={{row.middleName}}&lastName={{row.lastName}}&suffix={{row.suffix}}&gender={{row.gender|replace('M', 'male')|replace('F', 'female')}}&bloodType={{row.bloodType}}&birthDate={{row.birthDate}}&email={{row.email}}&mobileNumber={{row.mobileNumber}}&guardianName={{row.guardianName}}&guardianNumber={{row.guardianNumber}}&address={{row.address}}&campus=1" target="_blank" class="mr-3">Process</a> 
+
+                                {% endif -%}
+                                <a class="text-danger font-weight-bold text-decoration-none" href="/admin/gsuid/delete/{{row.id}}" title="Delete">✗</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif -%}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+{% endblock %}

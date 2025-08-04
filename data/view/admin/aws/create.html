@@ -1,0 +1,19 @@
+{% extends "document.html" %}
+
+{% block body %}
+<div class="col-10 ml-auto mr-auto pt-5">
+    <div class="login-form">
+        <h1 class="text-center h4 mb-4">Create Billing</h1>
+        <form action="" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="acsrf" value="{{acsrf}}">
+            <div class="form-group">
+                <label for="a">Billing</label>
+                <input name="bill" type="file" class="form-control">
+            </div>
+            <div class="text-center">
+                <button class="btn btn-primary">Generate</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
