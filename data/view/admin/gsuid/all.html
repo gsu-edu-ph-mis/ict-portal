@@ -2,17 +2,7 @@
 {% block body %}
 <div class="row">
     <div class="col-10 ml-auto mr-auto pt-5">
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link" href="/admin/gaccount/all">GSU Account Requests</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active font-weight-bold" href="/admin/gsuid/all">GSU ID</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/admin/survey/all">Surveys</a>
-            </li>
-        </ul>
+        {% include 'admin/tabs.html' %}
         <div class="tab-content p-3" style="border-radius:0 0 5px 5px;">
             {% include 'parts/flash.html' %}
             <div class="row mb-3 align-items-center">
