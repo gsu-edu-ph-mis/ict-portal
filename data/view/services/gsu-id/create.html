@@ -21,6 +21,7 @@
                     <div class="form-group" :data-error="errors.course" @click="errors.course=false">
                         <label for="idNumber" class="mr-1">Course</label>
                         <input v-model="course" name="course" type="hidden" class="form-control">
+                        
                         <autocomplete
                             initial-value=""
                             :initial-display="course"
@@ -32,6 +33,28 @@
                             v-on:clear="course='';course=''"
                             >
                         </autocomplete>
+                        <div class="alert alert-info mt-2">
+                            <div class="d-flex justify-content-between">
+                                <div class="p-2">
+                                    <p>For 1st year CEIT students choose:</p>
+                                    <ul>
+                                        <li>BIndTech-AT</li>
+                                        <li>BIndTech-ELT</li>
+                                        <li>BIndTech-EXT</li>
+                                        <li>BIndTech-MT</li>
+                                    </ul>
+                                </div>
+                                <div class="p-2">
+                                    <p>For 2nd-4th year CEIT students choose: </p>
+                                    <ul>
+                                        <li>BIT-AT</li>
+                                        <li>BIT-ELT</li>
+                                        <li>BIT-EXT</li>
+                                        <li>BIT-MT</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <h6 class="h6 mb-3">
                         <span class="mr-2">Personal Information</span>
