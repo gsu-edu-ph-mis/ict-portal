@@ -44,7 +44,7 @@
                         <tr>
                             <td>{{loop.index}}</td>
                             <td>{{row.uid}}</td>
-                            <td class="font-italic">{{row.createdAt|format_date('MMM DD, YYYY hh:mm A')}}</td>
+                            <td class="font-italic d-none d-md-table-cell">{{row.createdAt|format_date('MMM DD, YYYY hh:mm A')}}</td>
                             <td><a href="?s={{row.lastName}}">{{row.lastName}} {{row.suffix}}</a></td>
                             <td>{{row.firstName}}</td>
                             <td class="d-none d-md-table-cell">{{row.middleName}}</td>
@@ -56,7 +56,7 @@
 
                                 {% else %}
                                     <a href="/admin/gsuid/process/{{row.id}}" class="text-success mr-3">MARK DONE</a>
-                                    <a onclick="return confirm(`Create GSU Account?`)" href="/admin/gsuid/process-gsuaccount/{{row.id}}?acsrf={{acsrf}}" class="text-success mr-3">G. Acct.</a>
+                                    <!-- <a onclick="return confirm(`Create GSU Account?`)" href="/admin/gsuid/process-gsuaccount/{{row.id}}?acsrf={{acsrf}}" class="text-success mr-3">G. Acct.</a> -->
                                     <a href="https://servicedesk.gsu.edu.ph/request-form/ids-form?__svcIDValue=1&accountType={{row.accountType}}&idNumber={{row.idNumber}}&course={{row.course}}&firstName={{row.firstName}}&middleName={{row.middleName}}&lastName={{row.lastName}}&suffix={{row.suffix}}&gender={{row.gender|replace('M', 'male')|replace('F', 'female')}}&bloodType={{row.bloodType}}&birthDate={{row.birthDate}}&email={{row.email}}&mobileNumber={{row.mobileNumber}}&guardianName={{row.guardianName}}&guardianNumber={{row.guardianNumber}}&address={{row.address}}&campus=1" target="_blank" class="mr-3">Process</a> 
 
                                 {% endif -%}
@@ -80,7 +80,7 @@
                         <tr>
                             <td class="text-success">{{loop.index}}</td>
                             <td class="text-success">{{row.uid}}</td>
-                            <td class="font-italic">{{row.createdAt|format_date('MMM DD, YYYY hh:mm A')}}</td>
+                            <td class="font-italic d-none d-md-table-cell">{{row.createdAt|format_date('MMM DD, YYYY hh:mm A')}}</td>
                             <td><a href="?s={{row.lastName}}">{{row.lastName}}</a></td>
                             <td>{{row.firstName}}</td>
                             <td class="d-none d-md-table-cell">{{row.middleName}}</td>
@@ -92,7 +92,7 @@
 
                                 {% else %}
                                     <a href="/admin/gsuid/process/{{row.id}}" class="text-success mr-3">MARK DONE</a>
-                                    <a href="/admin/gsuid/process-gsuaccount/{{row.id}}" class="text-success mr-3">GSU Account</a>
+                                    <!-- <a href="/admin/gsuid/process-gsuaccount/{{row.id}}" class="text-success mr-3">GSU Account</a> -->
                                     <a href="https://servicedesk.gsu.edu.ph/request-form/ids-form?__svcIDValue=1&accountType={{row.accountType}}&idNumber={{row.idNumber}}&course={{row.course}}&firstName={{row.firstName}}&middleName={{row.middleName}}&lastName={{row.lastName}}&suffix={{row.suffix}}&gender={{row.gender|replace('M', 'male')|replace('F', 'female')}}&bloodType={{row.bloodType}}&birthDate={{row.birthDate}}&email={{row.email}}&mobileNumber={{row.mobileNumber}}&guardianName={{row.guardianName}}&guardianNumber={{row.guardianNumber}}&address={{row.address}}&campus=1" target="_blank" class="mr-3">Process</a> 
 
                                 {% endif -%}
