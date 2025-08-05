@@ -102,7 +102,9 @@ router.get('/address', async (req, res, next) => {
         }
         let addresses = await addressFinder.find(search, 2, 5, formatter)
         let addresses2 = await addressFinder.find(search.replace('sta.', 'Santa'), 2, 5, formatter)
-        let a2 = [...addresses, ...addresses2]
+        let a2 = [...addresses, ...addresses2].filter((obj, index, self) =>
+            index === self.findIndex((o) => o.id === obj.id)
+        );
         return res.send(a2)
     } catch (err) {
         next(err);
