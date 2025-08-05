@@ -325,10 +325,10 @@
                         me.errors['idNumber'] = true
                         throw new Error('Please specify the ID Number.')
                     } else {
-                        if (me.idNumber.length < 12) {
+                        if (me.idNumber.length < 11) {
                             me.errors['idNumber'] = true
                             throw new Error('Please check the ID Number. Must be 11 characters long.')
-                        } else if (/^\d{4}-\d{2}-\d{4}$/.test(me.idNumber) === false) {
+                        } else if (/^\d{4}-\d{1,2}-\d{4}$/.test(me.idNumber) === false) {
                             me.errors['idNumber'] = true
                             throw new Error('Invalid ID Number.')
                         }
