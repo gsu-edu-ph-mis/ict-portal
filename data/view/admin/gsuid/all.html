@@ -67,6 +67,7 @@
                         {%- if processed.length > 0 %}
                         <tr>
                             <th width="2%">#</th>
+                            <th width="2%">Ref</th>
                             <th width="20%">Created</th>
                             <th width="20%">Last Name</th>
                             <th width="20%">First Name</th>
@@ -78,6 +79,7 @@
                         {% for row in processed %}
                         <tr>
                             <td class="text-success">{{loop.index}}</td>
+                            <td class="text-success">{{row.uid}}</td>
                             <td class="font-italic">{{row.createdAt|format_date('MMM DD, YYYY hh:mm A')}}</td>
                             <td><a href="?s={{row.lastName}}">{{row.lastName}}</a></td>
                             <td>{{row.firstName}}</td>
