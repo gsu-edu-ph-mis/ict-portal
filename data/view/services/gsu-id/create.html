@@ -344,6 +344,12 @@
                     if (!me.middleName && !me.noMiddle) {
                         me.errors['middleName'] = true
                         throw new Error('Please specify the Middle Name.')
+                    } else {
+                        me.middleName = me.middleName.trim();
+                        if (_.get(me, 'middleName', '').slice(-1) == '.' || me.middleName.length <= 1) {
+                            me.errors['middleName'] = true
+                            throw new Error('Please write your Middle Name in full.');
+                        }
                     }
                     if (!me.lastName) {
                         me.errors['lastName'] = true
