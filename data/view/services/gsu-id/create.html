@@ -267,34 +267,34 @@
             address: '',
         },
         computed: {
-           age: function(){
-            let age = moment().diff(moment(this.birthDate), 'years')
-            if(age > 1 && age < 100){
-                return `(${age} years old)`
+            age: function () {
+                let age = moment().diff(moment(this.birthDate), 'years')
+                if (age > 1 && age < 100) {
+                    return `(${age} years old)`
+                }
+                return ''
             }
-            return ''
-           }
         },
         watch: {
-           
+
         },
         mounted: function () {
-           
-            
+
+
         },
         methods: {
-            onSelectCourse: function(o){
+            onSelectCourse: function (o) {
                 // this.courseId = o.value
                 this.course = o.value
             },
-            dataSourceCourse: function(input) {
+            dataSourceCourse: function (input) {
                 return '/courses?s=' + input
             },
-            onSelectAddress: function(o){
+            onSelectAddress: function (o) {
                 // this.courseId = o.value
                 this.address = o.display
             },
-            dataSourceAddress: function(input) {
+            dataSourceAddress: function (input) {
                 return '/address?s=' + input
             },
             capitalize: function (name) {
@@ -313,7 +313,7 @@
                 try {
                     const me = this;
                     Object.keys(this.$data).forEach(key => {
-                        if(typeof this[key] === 'string'){
+                        if (typeof this[key] === 'string') {
                             this[key] = this[key].trim()
                         }
                     });
@@ -325,9 +325,12 @@
                         me.errors['idNumber'] = true
                         throw new Error('Please specify the ID Number.')
                     } else {
-                        if(me.idNumber.length < 11){
+                        if (me.idNumber.length < 12) {
                             me.errors['idNumber'] = true
                             throw new Error('Please check the ID Number. Must be 11 characters long.')
+                        } else if (/^\d{4}-\d{2}-\d{4}$/.test(me.idNumber) === false) {
+                            me.errors['idNumber'] = true
+                            throw new Error('Invalid ID Number.')
                         }
                     }
                     if (!me.course) {
@@ -359,10 +362,10 @@
                         throw new Error('Please specify the Birth Date.')
                     } else {
                         const age = moment().diff(moment(me.birthDate), 'years')
-                        if(age < 15){
+                        if (age < 15) {
                             me.errors['birthDate'] = true
                             throw new Error(`Please double-check the Birth Date. Your age is only ${age} years old.`)
-                        } 
+                        }
                     }
                     if (!me.email) {
                         me.errors['email'] = true
@@ -372,7 +375,7 @@
                         me.errors['mobileNumber'] = true
                         throw new Error('Please specify the Mobile Number.')
                     } else {
-                        if(me.mobileNumber.length < 11){
+                        if (me.mobileNumber.length < 11) {
                             me.errors['mobileNumber'] = true
                             throw new Error('Please check the Mobile Number. Must be 11 characters long.')
                         }
@@ -385,7 +388,7 @@
                         me.errors['guardianNumber'] = true
                         throw new Error('Please specify the Guardian Number.')
                     } else {
-                        if(me.guardianNumber.length < 11){
+                        if (me.guardianNumber.length < 11) {
                             me.errors['guardianNumber'] = true
                             throw new Error('Please check the Guardian Number. Must be 11 characters long.')
                         }
@@ -394,7 +397,7 @@
                         me.errors['address'] = true
                         throw new Error('Please specify the Address.')
                     }
-                    
+
                     // if (!me.email) {
                     //     me.errors['email'] = true
                     //     throw new Error('Please specify the Alternative Email.')
@@ -414,13 +417,13 @@
                     //     me.errors['mobileNumber'] = true
                     //     throw new Error('Please specify the Mobile Number.')
                     // }
-                    
+
 
                     me.pending = true;
-                    grecaptcha.ready(function() {
-                        grecaptcha.execute('6LdZ4B4qAAAAAIJlZFVB1-dMraZJvcMotuEZ3JLK', {action: 'submit'}).then(function(token) {
+                    grecaptcha.ready(function () {
+                        grecaptcha.execute('6LdZ4B4qAAAAAIJlZFVB1-dMraZJvcMotuEZ3JLK', { action: 'submit' }).then(function (token) {
                             me.recaptchaToken = token;
-                            me.$nextTick(function() {
+                            me.$nextTick(function () {
                                 me.$refs.form.submit();
                             });
                         });
@@ -432,7 +435,7 @@
             }
         }
     });
-    function onTurnstile(token){
+    function onTurnstile(token) {
         vApp.token = token
     }
 </script>
