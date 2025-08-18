@@ -16,12 +16,11 @@
                     </div>
                     <div class="form-group" v-bind:data-error="errors['idNumber']" v-on:click="errors.idNumber=false">
                         <label for="idNumber" class="mr-1">ID Number</label>
-                        <input v-model="idNumber" name="idNumber" id="idNumber" type="text" class="form-control">
+                        <input v-model="idNumber" @blur="removeSpaces" name="idNumber" id="idNumber" type="text" class="form-control">
                     </div>
                     <div class="form-group" :data-error="errors.course" @click="errors.course=false">
                         <label for="idNumber" class="mr-1">Course</label>
                         <input v-model="course" name="course" type="hidden" class="form-control">
-                        
                         <autocomplete
                             initial-value=""
                             :initial-display="course"
@@ -33,28 +32,6 @@
                             v-on:clear="course='';course=''"
                             >
                         </autocomplete>
-                        <div class="alert alert-info mt-2">
-                            <div class="d-flex justify-content-between">
-                                <div class="p-2">
-                                    <p>For 1st year CEIT students choose:</p>
-                                    <ul>
-                                        <li>BIndTech-AT</li>
-                                        <li>BIndTech-ELT</li>
-                                        <li>BIndTech-EXT</li>
-                                        <li>BIndTech-MT</li>
-                                    </ul>
-                                </div>
-                                <div class="p-2">
-                                    <p>For 2nd-4th year CEIT students choose: </p>
-                                    <ul>
-                                        <li>BIT-AT</li>
-                                        <li>BIT-ELT</li>
-                                        <li>BIT-EXT</li>
-                                        <li>BIT-MT</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <h6 class="h6 mb-3">
                         <span class="mr-2">Personal Information</span>
@@ -163,18 +140,17 @@
                     <div class="form-row">
                         <div class="col-md-6">
                             <div class="form-group" :data-error="errors['guardianName']" @click="errors.guardianName=false">
-                                <label for="guardianName">Parent / Guardian</label>
+                                <label for="guardianName">Name of Parent / Guardian</label>
                                 <input @blur="capitalize('guardianName')" v-model="guardianName" name="guardianName" id="guardianName" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group" :data-error="errors['guardianNumber']" @click="errors.guardianNumber=false">
-                                <label for="guardianNumber">Parent / Guardian Contact</label>
+                                <label for="guardianNumber">Parent / Guardian Contact Number</label>
                                 <input v-model="guardianNumber" name="guardianNumber" id="guardianNumber" placeholder="09101234560" type="number" class="form-control">
                             </div>
                         </div>
                     </div>
-                    
                     <div class="form-row">
                         <div class="col-12">
                             <div class="form-group" :data-error="errors.address" @click="errors.address=false">
@@ -283,6 +259,9 @@
 
         },
         methods: {
+            removeSpaces: function(){
+                this.idNumber = this.idNumber.replace(/\s+/g, "")
+            },
             onSelectCourse: function (o) {
                 // this.courseId = o.value
                 this.course = o.value
@@ -328,7 +307,7 @@
                         if (me.idNumber.length < 11) {
                             me.errors['idNumber'] = true
                             throw new Error('Please check the ID Number. Must be 11 characters long.')
-                        } else if (/^\d{4}-\d{1,2}-\d{4}$/.test(me.idNumber) === false) {
+                        } else if (/^\d{4}-[A-Z0-9]-\d{4}$/.test(me.idNumber) === false) {
                             me.errors['idNumber'] = true
                             throw new Error('Invalid ID Number.')
                         }
@@ -341,14 +320,16 @@
                         me.errors['firstName'] = true
                         throw new Error('Please specify the First Name.')
                     }
-                    if (!me.middleName && !me.noMiddle) {
-                        me.errors['middleName'] = true
-                        throw new Error('Please specify the Middle Name.')
-                    } else {
-                        me.middleName = me.middleName.trim();
-                        if (_.get(me, 'middleName', '').slice(-1) == '.' || me.middleName.length <= 1) {
+                    if(!me.noMiddle){
+                        if (!me.middleName) {
                             me.errors['middleName'] = true
-                            throw new Error('Please write your Middle Name in full.');
+                            throw new Error('Please specify the Middle Name.')
+                        } else {
+                            me.middleName = me.middleName.trim();
+                            if (_.get(me, 'middleName', '').slice(-1) == '.' || me.middleName.length <= 1) {
+                                me.errors['middleName'] = true
+                                throw new Error('Please write your Middle Name in full.');
+                            }
                         }
                     }
                     if (!me.lastName) {
@@ -381,22 +362,32 @@
                         me.errors['mobileNumber'] = true
                         throw new Error('Please specify the Mobile Number.')
                     } else {
-                        if (me.mobileNumber.length < 11) {
+                        if (me.mobileNumber.length != 11) {
                             me.errors['mobileNumber'] = true
                             throw new Error('Please check the Mobile Number. Must be 11 characters long.')
                         }
                     }
                     if (!me.guardianName) {
                         me.errors['guardianName'] = true
-                        throw new Error('Please specify the Parent or Guardian.')
+                        throw new Error('Please specify the Name of Parent or Guardian.')
+                    } else {
+                        if (/^\d+$/.test(me.guardianName)) {
+                            me.errors['guardianName'] = true
+                            throw new Error('Invalid Name of Parent or Guardian.')
+                        }
                     }
                     if (!me.guardianNumber) {
                         me.errors['guardianNumber'] = true
                         throw new Error('Please specify the Guardian Number.')
                     } else {
-                        if (me.guardianNumber.length < 11) {
+                        if (me.guardianNumber.length != 11) {
                             me.errors['guardianNumber'] = true
                             throw new Error('Please check the Guardian Number. Must be 11 characters long.')
+                        } else {
+                            if (me.guardianNumber == me.mobileNumber) {
+                                me.errors['guardianNumber'] = true
+                                throw new Error('Mobile number is the same as your Guardian Number.')
+                            }
                         }
                     }
                     if (!me.address) {
