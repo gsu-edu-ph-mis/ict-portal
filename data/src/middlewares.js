@@ -185,7 +185,7 @@ module.exports = {
                     id: authUserId
                 },
             })
-            if (!['ict@gsu.edu.ph', 'nico.amarilla@gsu.edu.ph', 'crisvincent.ferrer@gsu.edu.ph', 'mark.nolasco@gsu.edu.ph', 'rocsan.cantuja@gsu.edu.ph', 'sieryl.laudato@gsu.edu.ph', 'johnmichael.gadot@gsu.edu.ph', 'johnpaul.garcia@gsu.edu.ph'].includes(user.email)) {
+            if (!['ict@gsu.edu.ph', 'nico.amarilla@gsu.edu.ph', 'crisvincent.ferrer@gsu.edu.ph', 'mark.nolasco@gsu.edu.ph', 'rocsan.cantuja@gsu.edu.ph', 'sieryl.laudato@gsu.edu.ph', 'johnmichael.gadot@gsu.edu.ph', 'johnpaul.garcia@gsu.edu.ph', 'genesisronaldomiguel.genive@gsu.edu.ph'].includes(user.email)) {
                 throw new Error(`Admin access required. Email: ${user.email}`)
             }
             next()
