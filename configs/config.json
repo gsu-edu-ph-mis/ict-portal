@@ -61,5 +61,17 @@
     "threshold": 0.4,
     "clientKey": "6LdZ4B4qAAAAAIJlZFVB1-dMraZJvcMotuEZ3JLK"
   },
-  "loginDelay": 0
+  "loginDelay": 0,
+  "admins": [
+    "ict@gsu.edu.ph", 
+    "nico.amarilla@gsu.edu.ph", 
+    "crisvincent.ferrer@gsu.edu.ph", 
+    "mark.nolasco@gsu.edu.ph", 
+    "rocsan.cantuja@gsu.edu.ph", 
+    "sieryl.laudato@gsu.edu.ph", 
+    "johnmichael.gadot@gsu.edu.ph", 
+    "johnpaul.garcia@gsu.edu.ph", 
+    "genesisronaldomiguel.genive@gsu.edu.ph",
+    "yvonnie.jalandon@gsu.edu.ph"
+  ]
 }
