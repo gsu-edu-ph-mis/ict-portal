@@ -2,7 +2,6 @@
 
 // External modules
 const express = require('express')
-const fileUpload = require('express-fileupload')
 
 const lodash = require('lodash')
 const moment = require('moment')
@@ -12,12 +11,25 @@ const { Sequelize } = require('sequelize')
 // Core modules
 
 // Modules
-const passwordMan = require('../../password-man')
 const middlewares = require('../../middlewares')
-const googleAdmin = require('../../google-admin')
+const {
+    LightsailClient,
+    GetInstanceStateCommand,
+    StopInstanceCommand,
+    StartInstanceCommand
+} = require("@aws-sdk/client-lightsail")
 
 // Router
 let router = express.Router()
+
+// User: LightsailBot
+const clientInstance = new LightsailClient({
+    credentials: {
+        accessKeyId: CRED.aws.LightsailBot.accessKeyId,
+        secretAccessKey: CRED.aws.LightsailBot.secretAccessKey,
+    },
+    region: "ap-southeast-1", // change if needed
+})
 
 router.use('/admin/aws', middlewares.requireAdminUser)
 
@@ -76,118 +88,83 @@ router.get('/admin/aws/all', async (req, res, next) => {
 
 
 // Create
-router.get('/admin/aws/create', async (req, res, next) => {
+router.get('/admin/aws/instance/:instanceName', async (req, res, next) => {
     try {
+        const instanceName = req.params.instanceName
+
+        // await new Promise(resolve => setTimeout(resolve, 2000)) // Rate limit 
+        // throw new Error('Bad request.')
+        // return res.send({
+        //     name: instanceName,
+        //     status: 'running',
+        // })
+        console.log(`Getting...`)
+        const command = new GetInstanceStateCommand({ instanceName });
+        const response = await clientInstance.send(command);
+        console.log(response)
+        console.log(`${instanceName}: ${response.state.name}`) // running | stopped | pending
+
         let data = {
+            name: instanceName,
+            status: response.state.name,
         }
-        res.render('admin/aws/create.html', data);
+        res.send(data)
     } catch (err) {
         next(err);
     }
 });
-router.post('/admin/aws/create', middlewares.antiCsrfCheck, fileUpload(), async (req, res, next) => {
+router.post('/admin/aws/instance/:instanceName/stop', middlewares.antiCsrfCheck, async (req, res, next) => {
     try {
-        let bill = req?.files?.bill
-        console.log(bill)
-        flash.ok(req, 'aws', `GSU account request deleted.`)
-        res.redirect('/admin/aws/create')
-    } catch (err) {
-        next(err);
-    }
-});
+        const instanceName = req.params.instanceName
 
-// Delete
-router.get('/admin/aws/delete/:gsuidId', middlewares.getGsuid(), async (req, res, next) => {
-    try {
-        let gsuid = res.gsuid
+        // await new Promise(resolve => setTimeout(resolve, 2000)) // Rate limit 
+        // throw new Error('Bad request.')
+        // return res.send({
+        //     name: instanceName,
+        //     status: 'unknown',
+        // })
+        console.log(`Stopping...`)
+        const command = new StopInstanceCommand({ instanceName });
+        const response = await clientInstance.send(command);
+        console.log(response)
+        const lastOp = response.operations.pop()
+        console.log(`${instanceName}: ${lastOp?.operationType}`)
+
         let data = {
-            gsuid: gsuid
+            name: instanceName,
+            status: 'unknown',
         }
-        res.render('admin/aws/delete.html', data);
-    } catch (err) {
-        next(err);
-    }
-});
-router.post('/admin/aws/delete/:gsuidId', middlewares.getGsuid({ raw: false }), async (req, res, next) => {
-    try {
-        let gsuid = res.gsuid
-        await gsuid.destroy()
-        flash.ok(req, 'gsuid', `GSU account request deleted.`)
-        res.redirect('/admin/aws/all')
+        res.send(data)
     } catch (err) {
         next(err);
     }
 });
 
-// Allow GSU account to be created when applied for ID
-router.get('/admin/aws/process-gsuaccount/:gsuidId', middlewares.antiCsrfCheck, middlewares.getGsuid({ raw: false }), async (req, res, next) => {
+router.post('/admin/aws/instance/:instanceName/start', middlewares.antiCsrfCheck, async (req, res, next) => {
     try {
-        let gsuid = res.gsuid
+        const instanceName = req.params.instanceName
 
-        let data = {}
-        data.idNumber = gsuid.idNumber
-        data.firstName = gsuid.firstName
-        data.middleName = gsuid.middleName
-        data.lastName = gsuid.lastName
+        // await new Promise(resolve => setTimeout(resolve, 2000)) // Rate limit 
+        // return res.send({
+        //     name: instanceName,
+        //     status: 'unknown',
+        // })
+        console.log(`Starting...`)
+        const command = new StartInstanceCommand({ instanceName });
+        const response = await clientInstance.send(command);
+        console.log(response)
+        const lastOp = response.operations.pop()
+        console.log(`${instanceName}: ${lastOp?.operationType}`)
 
-        let found = await req.app.locals.db.models.Gaccount.findOne({
-            where: {
-                firstName: {
-                    [Sequelize.Op.like]: `${data.firstName}`
-                },
-                middleName: {
-                    [Sequelize.Op.like]: `${data.middleName}`
-                },
-                lastName: {
-                    [Sequelize.Op.like]: `${data.lastName}`
-                }
-            }
-        })
-        if (found) {
-            return res.redirect(`/admin/gaccount/process/${found.id}`)
+        let data = {
+            name: instanceName,
+            status: 'unknown',
         }
-
-        let gaccount = req.app.locals.db.models.Gaccount.build({
-            uid: `${passwordMan.genPasscode(4)}`,
-            accountType: gsuid.accountType,
-            idNumber: data.idNumber,
-            firstName: data.firstName,
-            middleName: data.middleName,
-            lastName: data.lastName,
-        })
-        await gaccount.save()
-
-        res.redirect(`/admin/aws/process/${gaccount.id}`)
+        res.send(data)
     } catch (err) {
         next(err);
     }
 });
 
-router.get('/admin/aws/process/:gsuidId', middlewares.getGsuid({ raw: false }), async (req, res, next) => {
-    try {
-        let gsuid = res.gsuid
-
-        gsuid.status = 1
-        await gsuid.save()
-
-        flash.ok(req, 'gsuid', `GSU ID app. status updated.`)
-        res.redirect(`/admin/aws/all`)
-    } catch (err) {
-        next(err);
-    }
-});
-router.get('/admin/aws/unprocess/:gsuidId', middlewares.getGsuid({ raw: false }), async (req, res, next) => {
-    try {
-        let gsuid = res.gsuid
-
-        gsuid.status = 0
-        await gsuid.save()
-
-        flash.ok(req, 'gsuid', `GSU ID app. status updated.`)
-        res.redirect(`/admin/aws/all`)
-    } catch (err) {
-        next(err);
-    }
-});
 
 module.exports = router;
