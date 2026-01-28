@@ -54,24 +54,24 @@
                     status: 'pending', // running | stopped | pending | unknown
                     pending: false,
                 },
-                {
-                    name: 'instance-gsu-mysql',
-                    description: 'mysql',
-                    status: 'pending',
-                    pending: false,
-                },
-                {
-                    name: 'instance-gsu-service-desk2',
-                    description: 'servicedesk',
-                    status: 'pending',
-                    pending: false,
-                },
-                {
-                    name: 'instance-gsu-ojs',
-                    description: 'ojs',
-                    status: 'pending',
-                    pending: false,
-                },
+                // {
+                //     name: 'instance-gsu-mysql',
+                //     description: 'mysql',
+                //     status: 'pending',
+                //     pending: false,
+                // },
+                // {
+                //     name: 'instance-gsu-service-desk2',
+                //     description: 'servicedesk',
+                //     status: 'pending',
+                //     pending: false,
+                // },
+                // {
+                //     name: 'instance-gsu-ojs',
+                //     description: 'ojs',
+                //     status: 'pending',
+                //     pending: false,
+                // },
                 {
                     name: 'instance-gsu-hris2',
                     description: 'hris clinic',
@@ -84,10 +84,9 @@
         mounted: async function () {
             const me = this
 
-            me.instances.forEach(async (instance) => {
-                await me.getStatus(instance)
-            })
-
+            await Promise.all(
+                me.instances.map(instance => me.getStatus(instance))
+            )
             // setInterval(() => {
             //     me.instances.forEach(async (instance) => {
             //         await me.getStatus(instance)

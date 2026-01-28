@@ -92,7 +92,7 @@ router.get('/admin/aws/instance/:instanceName', async (req, res, next) => {
     try {
         const instanceName = req.params.instanceName
 
-        // await new Promise(resolve => setTimeout(resolve, 2000)) // Rate limit 
+        await new Promise(resolve => setTimeout(resolve, 600)) // Rate limit 
         // throw new Error('Bad request.')
         // return res.send({
         //     name: instanceName,
@@ -117,7 +117,7 @@ router.post('/admin/aws/instance/:instanceName/stop', middlewares.antiCsrfCheck,
     try {
         const instanceName = req.params.instanceName
 
-        // await new Promise(resolve => setTimeout(resolve, 2000)) // Rate limit 
+        await new Promise(resolve => setTimeout(resolve, 600)) // Rate limit
         // throw new Error('Bad request.')
         // return res.send({
         //     name: instanceName,
@@ -144,7 +144,7 @@ router.post('/admin/aws/instance/:instanceName/start', middlewares.antiCsrfCheck
     try {
         const instanceName = req.params.instanceName
 
-        // await new Promise(resolve => setTimeout(resolve, 2000)) // Rate limit 
+        await new Promise(resolve => setTimeout(resolve, 600)) // Rate limit
         // return res.send({
         //     name: instanceName,
         //     status: 'unknown',
