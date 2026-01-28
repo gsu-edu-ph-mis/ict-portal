@@ -5,17 +5,20 @@
         {% include 'admin/tabs.html' %}
         <div class="tab-content p-3" style="border-radius:0 0 5px 5px;">
             {% include 'parts/flash.html' %}
-            <table class="table table-striped table-sm">
+            <p>Amazon Web Services - Server Instances</p>
+            <table class="table table-striped table-sm border">
                 <tr>
-                    <th>#</th>
+                    <th width="1%">#</th>
                     <th>Instance</th>
-                    <th>Status</th>
-                    <th></th>
+                    <th>Description</th>
+                    <th width="2%">Status</th>
+                    <th width="2%">&nbsp;</th>
                 </tr>
                 <tr v-for="instance, i in instances">
                     <td>${i+1}</td>
                     <td>${instance.name}</td>
-                    <td>${instance.status}</td>
+                    <td>${instance.description}</td>
+                    <td class="text-capitalize">${instance.status}</td>
                     <td>
                         <button v-if="instance.status==='running'" @click="toggle(instance, 'stop')"
                             class="btn btn-sm btn-danger">Stop</button>
@@ -47,26 +50,31 @@
             instances: [
                 {
                     name: 'instance-gsu-web2',
+                    description: 'website icto cst board ict alumni bacis',
                     status: 'pending', // running | stopped | pending | unknown
                     pending: false,
                 },
                 {
                     name: 'instance-gsu-mysql',
+                    description: 'mysql',
                     status: 'pending',
                     pending: false,
                 },
                 {
                     name: 'instance-gsu-service-desk2',
+                    description: 'servicedesk',
                     status: 'pending',
                     pending: false,
                 },
                 {
                     name: 'instance-gsu-ojs',
+                    description: 'ojs',
                     status: 'pending',
                     pending: false,
                 },
                 {
                     name: 'instance-gsu-hris2',
+                    description: 'hris clinic',
                     status: 'pending',
                     pending: false,
                 }
