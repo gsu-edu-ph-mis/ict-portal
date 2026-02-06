@@ -20,12 +20,9 @@
                     <td>${instance.description}</td>
                     <td class="text-capitalize">${instance.status}</td>
                     <td>
-                        <button v-if="instance.status==='running'" @click="toggle(instance, 'stop')"
-                            class="btn btn-sm btn-danger">Stop</button>
-                        <button v-if="instance.status==='stopped'" @click="toggle(instance, 'start')"
-                            class="btn btn-sm btn-success">Start</button>
-                        <button v-if="instance.status==='unknown'" @click="getStatus(instance)"
-                            class="btn btn-sm btn-light">Check</button>
+                        <button v-if="instance.status==='running'" @click="toggle(instance, 'stop')" class="btn btn-sm btn-danger">Stop</button>
+                        <button v-if="instance.status==='stopped'" @click="toggle(instance, 'start')" class="btn btn-sm btn-success">Start</button>
+                        <button v-if="instance.status==='unknown'" @click="getStatus(instance)" class="btn btn-sm btn-light">Check</button>
                     </td>
                 </tr>
             </table>

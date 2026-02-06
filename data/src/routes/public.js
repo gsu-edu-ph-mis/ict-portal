@@ -163,11 +163,11 @@ router.get('/logout', async (req, res, next) => {
         next(err);
     }
 });
-router.get('/gmail', async (req, res, next) => {
+router.get('/systems-development', async (req, res, next) => {
     try {
 
 
-        res.render('gmail.html');
+        res.render('systems-development.njk');
     } catch (err) {
         next(err);
     }
