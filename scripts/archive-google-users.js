@@ -1,5 +1,5 @@
 /**
- * node scripts/delete-google-users.js
+ * node scripts/archive-google-users.js
  */
 // Core modules
 const fs = require('fs');
@@ -48,33 +48,34 @@ global.CRED = credLoader.getConfig()
             let results = []
 
 
-            fs.createReadStream(`C:/Users/gsu/Downloads/User_Download_29092026_122953.csv`, {
+            fs.createReadStream(`C:/Users/gsu/Downloads/User_Download_29092026_161444.csv`, {
                 encoding: 'utf8',
                 mapValues: ({ header, index, value }) => value.trim()
             })
                 .pipe(csvParser())
                 .on('data', (data) => {
-                    console.log(data)
-                    if (data['Last Sign In [READ ONLY]'] === 'Never logged in') {
+                    // console.log(data)
+                    // if (data['Last Sign In [READ ONLY]'] === 'Never logged in') {
                         let email = data['Email Address [Required]']
                         if (email.includes('@gsc.edu.ph')) {
                             emails.push(email)
+                            console.log(email)
                         }
-                    }
+                    // }
                 })
                 .on('end', async () => {
-                    // 
+                    //
                     for(let i = 0; i < emails.length; i++){
                         let email = emails[i]
                         try{
-                            await googleAdmin.deleteUser(email)
+                            await googleAdmin.archiveUser(email)
                             results.push(email)
-                            console.log(`Deleted: ${email}`)
+                            console.log(`Archived: ${email}`)
                         } catch (err){
                             console.log(`ERROR: ${email} - ${err.message}`)
                         }
                     }
-                    console.log(`Deleted ${results.length} accounts.`)
+                    console.log(`Archived ${results.length} accounts.`)
                 });
 
         } catch (err) {
@@ -82,5 +83,4 @@ global.CRED = credLoader.getConfig()
         } finally {
         }
     })()
-
 

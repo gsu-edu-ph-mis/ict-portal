@@ -46,5 +46,14 @@ module.exports = {
       userKey: email, // Email or user ID of the user to delete
     });
     return res
+  },
+  archiveUser: async (email) => {
+    const res = await admin.users.update({
+      userKey: email, // Email or user ID of the user to archive
+      requestBody: {
+        archived: true,
+      },
+    });
+    return res
   }
 }
